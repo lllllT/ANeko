@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">ANeko</string>
+
+  <string name="notification_enable">Neko is enabled.</string>
+  <string name="notification_disable">Neko is disabled.</string>
+
+  <string name="pref_cat_motion">Motion Settings</string>
+  <string name="pref_motion_enable_title">Enable the neko</string>
+  <string name="pref_motion_enable_summary">To neko, or not to neko.</string>
+</resources>
