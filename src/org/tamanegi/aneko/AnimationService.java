@@ -38,9 +38,10 @@ public class AnimationService extends Service
 
     private static final long ANIMATION_INTERVAL = 125; // msec
 
-    private static final float FORCE_FACTOR = 1f;
-    private static final float PROXIMITY_LENGTH = 10;   // dp
-    private static final float VELOCITY_MAX = 100f;     // dp per sec
+    private static final float FORCE_FACTOR = 20f;
+    private static final float DEACCELERATE_LENGTH = 100; // dp
+    private static final float PROXIMITY_LENGTH = 10;     // dp
+    private static final float VELOCITY_MAX = 100f;       // dp per sec
 
     private boolean is_started;
     private SharedPreferences prefs;
@@ -145,7 +146,7 @@ public class AnimationService extends Service
         motion_state.setCurrentPosition(-100, 100);
         motion_state.setTargetPosition(metrics.widthPixels / 2,
                                        metrics.heightPixels / 2);
-        handler.sendEmptyMessage(MSG_ANIMATE);
+        requestAnimate();
     }
 
     private void stopAnimation()
@@ -210,6 +211,13 @@ public class AnimationService extends Service
         }
     }
 
+    private void requestAnimate()
+    {
+        if(! handler.hasMessages(MSG_ANIMATE)) {
+            handler.sendEmptyMessage(MSG_ANIMATE);
+        }
+    }
+
     private boolean onHandleMessage(Message msg)
     {
         switch(msg.what) {
@@ -261,9 +269,12 @@ public class AnimationService extends Service
         public boolean onTouch(View v, MotionEvent ev)
         {
             if(ev.getAction() == MotionEvent.ACTION_OUTSIDE) {
-                // todo:
                 motion_state.setTargetPosition(ev.getX(), ev.getY());
-                handler.sendEmptyMessage(MSG_ANIMATE);
+                requestAnimate();
+            }
+            else if(ev.getAction() == MotionEvent.ACTION_CANCEL) {
+                motion_state.forceStop();
+                requestAnimate();
             }
 
             return false;
@@ -282,6 +293,7 @@ public class AnimationService extends Service
         private int width = 0;
         private int height = 0;
 
+        private float deaccelerate_length = DEACCELERATE_LENGTH;
         private float proxmity_length = PROXIMITY_LENGTH;
         private float velocity_max = VELOCITY_MAX;
 
@@ -296,11 +308,12 @@ public class AnimationService extends Service
                 return false;
             }
 
-            vx = dx * FORCE_FACTOR;
-            vy = dy * FORCE_FACTOR;
+            vx += dx * FORCE_FACTOR / len;
+            vy += dy * FORCE_FACTOR / len;
             float vec = FloatMath.sqrt(vx * vx + vy * vy);
-            if(vec > velocity_max) {
-                float vr = velocity_max / vec;
+            float vmax = velocity_max * Math.min(len / deaccelerate_length, 1);
+            if(vec > vmax) {
+                float vr = vmax / vec;
                 vx *= vr;
                 vy *= vr;
             }
@@ -312,6 +325,7 @@ public class AnimationService extends Service
 
         private void setDensity(float density)
         {
+            deaccelerate_length = DEACCELERATE_LENGTH * density;
             proxmity_length = PROXIMITY_LENGTH * density;
             velocity_max = VELOCITY_MAX * density;
         }
@@ -332,6 +346,11 @@ public class AnimationService extends Service
         {
             target_x = x;
             target_y = y;
+        }
+
+        private void forceStop()
+        {
+            setTargetPosition(cur_x, cur_y);
         }
 
         private Matrix getMatrix()
