@@ -6,9 +6,8 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Matrix;
 import android.graphics.PixelFormat;
-import android.graphics.Rect;
+import android.graphics.Point;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -36,12 +35,13 @@ public class AnimationService extends Service
 
     private static final int MSG_ANIMATE = 1;
 
-    private static final long ANIMATION_INTERVAL = 125; // msec
+    // todo:
+    private static final float DEF_ACCELERATION = 160f;
+    private static final float DEF_DEACCELERATE_DISTANCE = 100; // dp
+    private static final float DEF_MAX_SPPEED = 100f; // dp per sec
 
-    private static final float FORCE_FACTOR = 20f;
-    private static final float DEACCELERATE_LENGTH = 100; // dp
-    private static final float PROXIMITY_LENGTH = 10;     // dp
-    private static final float VELOCITY_MAX = 100f;       // dp per sec
+    private static final long ANIMATION_INTERVAL = 125; // msec
+    private static final float PROXIMITY_LENGTH = 10;   // dp
 
     private boolean is_started;
     private SharedPreferences prefs;
@@ -51,6 +51,8 @@ public class AnimationService extends Service
     private MotionState motion_state;
     private View touch_view = null;
     private ImageView image_view = null;
+    private WindowManager.LayoutParams touch_params = null;
+    private WindowManager.LayoutParams image_params = null;
 
     @Override
     public void onCreate()
@@ -119,30 +121,33 @@ public class AnimationService extends Service
 
         touch_view = new View(this);
         touch_view.setOnTouchListener(new TouchListener());
-        WindowManager.LayoutParams touch_params =
-            new WindowManager.LayoutParams(
-                0, 0,
-                WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
-                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
-                PixelFormat.TRANSLUCENT);
+        touch_params = new WindowManager.LayoutParams(
+            0, 0,
+            WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
+            WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+            PixelFormat.TRANSLUCENT);
         touch_params.gravity = Gravity.LEFT | Gravity.TOP;
         wm.addView(touch_view, touch_params);
 
         image_view = new ImageView(this);
         image_view.setScaleType(ImageView.ScaleType.MATRIX);
         image_view.setImageResource(R.drawable.neko_wait);
-        WindowManager.LayoutParams image_params =
-            new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.FILL_PARENT,
-                WindowManager.LayoutParams.FILL_PARENT,
-                WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                PixelFormat.TRANSLUCENT);
+        image_params = new WindowManager.LayoutParams(
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+            PixelFormat.TRANSLUCENT);
+        image_params.gravity = Gravity.LEFT | Gravity.TOP;
         wm.addView(image_view, image_params);
 
+        Drawable drawable = image_view.getDrawable();
+        motion_state.setSize(drawable.getIntrinsicWidth(),
+                             drawable.getIntrinsicHeight());
         motion_state.setCurrentPosition(-100, 100);
         motion_state.setTargetPosition(metrics.widthPixels / 2,
                                        metrics.heightPixels / 2);
@@ -229,8 +234,15 @@ public class AnimationService extends Service
                   if(drawable instanceof Animatable) {
                       ((Animatable)drawable).start();
                   }
-                  motion_state.setBounds(drawable.getBounds());
-                  image_view.setImageMatrix(motion_state.getMatrix());
+
+                  Point pt = motion_state.getPosition();
+                  image_params.x = pt.x;
+                  image_params.y = pt.y;
+
+                  WindowManager wm =
+                      (WindowManager)getSystemService(WINDOW_SERVICE);
+                  wm.updateViewLayout(image_view, image_params);
+
                   handler.sendEmptyMessageDelayed(
                       MSG_ANIMATE, ANIMATION_INTERVAL);
               }
@@ -293,47 +305,53 @@ public class AnimationService extends Service
         private int width = 0;
         private int height = 0;
 
-        private float deaccelerate_length = DEACCELERATE_LENGTH;
-        private float proxmity_length = PROXIMITY_LENGTH;
-        private float velocity_max = VELOCITY_MAX;
+        private float acceleration = DEF_ACCELERATION;
+        private float deaccelerate_distance = DEF_DEACCELERATE_DISTANCE;
+        private float proximity_length = PROXIMITY_LENGTH;
+        private float velocity_max = DEF_MAX_SPPEED;
 
         private boolean updateState()
         {
             float dx = target_x - cur_x;
             float dy = target_y - cur_y;
             float len = FloatMath.sqrt(dx * dx + dy * dy);
-            if(len <= proxmity_length) {
+            if(len <= proximity_length) {
+                android.util.Log.d("neko", "dbg: updateState: stop");
                 vx = 0;
                 vy = 0;
                 return false;
             }
 
-            vx += dx * FORCE_FACTOR / len;
-            vy += dy * FORCE_FACTOR / len;
+            float interval = ANIMATION_INTERVAL / 1000f;
+
+            vx += acceleration * interval * dx / len;
+            vy += acceleration * interval * dy / len;
             float vec = FloatMath.sqrt(vx * vx + vy * vy);
-            float vmax = velocity_max * Math.min(len / deaccelerate_length, 1);
+            float vmax = velocity_max *
+                Math.min((len + 1) / (deaccelerate_distance + 1), 1);
             if(vec > vmax) {
                 float vr = vmax / vec;
                 vx *= vr;
                 vy *= vr;
             }
 
-            cur_x += vx * ANIMATION_INTERVAL / 1000;
-            cur_y += vy * ANIMATION_INTERVAL / 1000;
+            cur_x += vx * interval;
+            cur_y += vy * interval;
             return true;
         }
 
         private void setDensity(float density)
         {
-            deaccelerate_length = DEACCELERATE_LENGTH * density;
-            proxmity_length = PROXIMITY_LENGTH * density;
-            velocity_max = VELOCITY_MAX * density;
+            acceleration = DEF_ACCELERATION * density;
+            deaccelerate_distance = DEF_DEACCELERATE_DISTANCE * density;
+            proximity_length = PROXIMITY_LENGTH * density;
+            velocity_max = DEF_MAX_SPPEED * density;
         }
 
-        private void setBounds(Rect rect)
+        private void setSize(int w, int h)
         {
-            width = rect.width();
-            height = rect.height();
+            width = w;
+            height = h;
         }
 
         private void setCurrentPosition(float x, float y)
@@ -351,13 +369,14 @@ public class AnimationService extends Service
         private void forceStop()
         {
             setTargetPosition(cur_x, cur_y);
+            vx = 0;
+            vy = 0;
         }
 
-        private Matrix getMatrix()
+        private Point getPosition()
         {
-            Matrix mat = new Matrix();
-            mat.setTranslate(cur_x - width / 2, cur_y - height / 2);
-            return mat;
+            return new Point((int)(cur_x - width / 2f),
+                             (int)(cur_y - height / 2f));
         }
     }
 }

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<motion-params acceleration="160dp"
+               deaccelerationDistance="100dp"
+               maxVelocity="100dp"
+               >
+  <motion state="stop" duration="1000" nextState="wait"
+          checkWall="true">
+    <item drawable="@drawable/mati1" />
+  </motion>
+
+  <motion state="wait">
+    <item drawable="@drawable/neko_wait" />
+    <repeat-item>
+      <repeat-item repeatCount="50">
+        <item drawable="@drawable/neko_sleep" />
+      </repeat-item>
+      <item drawable="@drawable/neko_yawn" />
+    </repeat-item>
+  </motion>
+
+  <motion state="awake" duration="750"
+          checkMove="true">
+    <item drawable="@drawable/awake" />
+  </motion>
+
+  <motion state="moveUp">
+    <item drawable="@drawable/neko_move_up" />
+  </motion>
+
+  <motion state="moveDown">
+    <item drawable="@drawable/neko_move_down" />
+  </motion>
+
+  <motion state="moveLeft">
+    <item drawable="@drawable/neko_move_left" />
+  </motion>
+
+  <motion state="moveRight">
+    <item drawable="@drawable/neko_move_right" />
+  </motion>
+
+  <motion state="moveUpLeft">
+    <item drawable="@drawable/neko_move_upleft" />
+  </motion>
+
+  <motion state="moveUpRight">
+    <item drawable="@drawable/neko_move_upright" />
+  </motion>
+
+  <motion state="moveUpLeft">
+    <item drawable="@drawable/neko_move_upleft" />
+  </motion>
+
+  <motion state="moveDownRight">
+    <item drawable="@drawable/neko_move_downright" />
+  </motion>
+
+  <motion state="moveDownLeft">
+    <item drawable="@drawable/neko_move_downleft" />
+  </motion>
+
+  <motion state="moveDownLeft">
+    <item drawable="@drawable/neko_move_downleft" />
+  </motion>
+
+  <motion state="wallUp" duration="1500" nextState="wait">
+    <item drawable="@drawable/neko_wall_up" />
+  </motion>
+
+  <motion state="wallDown" duration="1500" nextState="wait">
+    <item drawable="@drawable/neko_wall_down" />
+  </motion>
+
+  <motion state="wallLeft" duration="1500" nextState="wait">
+    <item drawable="@drawable/neko_wall_left" />
+  </motion>
+
+  <motion state="wallRight" duration="1500" nextState="wait">
+    <item drawable="@drawable/neko_wall_right" />
+  </motion>
+</motion-params>
