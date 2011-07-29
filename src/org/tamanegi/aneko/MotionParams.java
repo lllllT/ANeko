@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Xml;
 
+// todo: change name: MotionState
 public class MotionParams
 {
     private static final String TAG_MOTION_PARAMS = "motion-params";

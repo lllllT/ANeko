@@ -10,9 +10,14 @@ public class ANekoReceiver extends BroadcastReceiver
     public void onReceive(Context context, Intent intent)
     {
         android.util.Log.d("neko", "dbg: onReceive: " + intent);
-        if(Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-            context.startService(new Intent(context, AnimationService.class)
-                                 .setAction(AnimationService.ACTION_START));
+        if(Intent.ACTION_PACKAGE_REPLACED.equals(intent.getAction())) {
+            String pkg = intent.getData().getEncodedSchemeSpecificPart();
+            if(! context.getPackageName().equals(pkg)) {
+                return;
+            }
         }
+
+        context.startService(new Intent(context, AnimationService.class)
+                             .setAction(AnimationService.ACTION_START));
     }
 }
