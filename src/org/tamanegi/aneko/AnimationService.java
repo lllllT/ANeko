@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Handler;
@@ -91,6 +92,15 @@ public class AnimationService extends Service
         }
 
         return START_REDELIVER_INTENT;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration conf)
+    {
+        WindowManager wm = (WindowManager)getSystemService(WINDOW_SERVICE);
+        int dw = wm.getDefaultDisplay().getWidth();
+        int dh = wm.getDefaultDisplay().getHeight();
+        motion_state.setDisplaySize(dw, dh);
     }
 
     private void startAnimation()
