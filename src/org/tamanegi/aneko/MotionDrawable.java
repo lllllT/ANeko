@@ -366,13 +366,15 @@ public class MotionDrawable extends Drawable implements Animatable
         @Override
         public Drawable newDrawable()
         {
-            return null;                        // todo:
+            throw new UnsupportedOperationException(
+                "newDrawable is not supported");
         }
 
         @Override
         public Drawable newDrawable(Resources res)
         {
-            return null;                        // todo:
+            throw new UnsupportedOperationException(
+                "newDrawable is not supported");
         }
 
         private int getOpacity()

@@ -127,7 +127,7 @@ public class MotionParams
 
     public String getMoveState(MoveDirection dir)
     {
-        return move_state_prefix +
+        String state = move_state_prefix +
             (dir == MoveDirection.UP ? "Up" :
              dir == MoveDirection.DOWN ? "Down" :
              dir == MoveDirection.LEFT ? "Left" :
@@ -137,16 +137,18 @@ public class MotionParams
              dir == MoveDirection.DOWN_LEFT ? "DownLeft" :
              dir == MoveDirection.DOWN_RIGHT ? "DownRight" :
              "");
+        return (motions.containsKey(state) ? state : null);
     }
 
     public String getWallState(WallDirection dir)
     {
-        return wall_state_prefix +
+        String state = wall_state_prefix +
             (dir == WallDirection.UP ? "Up" :
              dir == WallDirection.DOWN ? "Down" :
              dir == WallDirection.LEFT ? "Left" :
              dir == WallDirection.RIGHT ? "Right" :
              "");
+        return (motions.containsKey(state) ? state : null);
     }
 
     public String getNextState(String state)

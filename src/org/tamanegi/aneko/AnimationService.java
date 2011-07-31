@@ -110,8 +110,7 @@ public class AnimationService extends Service
         motion_state.setParams(
             new MotionParams(this, getResources(), R.xml.neko));
         motion_state.setDisplaySize(dw, dh);
-        //motion_state.setCurrentPosition(-100, 100); // todo:
-        motion_state.setCurrentPosition(100, 100); // todo:
+        motion_state.setCurrentPosition(-100, 100); // todo:
         motion_state.setTargetPosition(dw / 2, dh / 2);
 
         touch_view = new View(this);
@@ -145,7 +144,6 @@ public class AnimationService extends Service
     {
         prefs.unregisterOnSharedPreferenceChangeListener(pref_listener);
 
-        // todo:
         WindowManager wm = (WindowManager)getSystemService(WINDOW_SERVICE);
         if(touch_view != null) {
             wm.removeView(touch_view);
@@ -214,7 +212,7 @@ public class AnimationService extends Service
         MotionDrawable drawable = motion_state.getCurrentDrawable();
         image_view.setImageDrawable(drawable);
         drawable.stop();
-        drawable.start();               // todo: specify initial frame
+        drawable.start();
 
         int duration = motion_state.getCurrentDuration();
         handler.removeMessages(MSG_MOTION_END);
@@ -223,12 +221,24 @@ public class AnimationService extends Service
         }
     }
 
+    private void updatePosition()
+    {
+        Point pt = motion_state.getPosition();
+        image_params.x = pt.x;
+        image_params.y = pt.y;
+
+        WindowManager wm =
+            (WindowManager)getSystemService(WINDOW_SERVICE);
+        wm.updateViewLayout(image_view, image_params);
+    }
+
     private void updateToNext()
     {
         if(motion_state.checkWall() ||
            motion_state.updateMovingState() ||
            motion_state.changeToNextState()) {
             updateDrawable();
+            updatePosition();
             requestAnimate();
         }
     }
@@ -238,7 +248,7 @@ public class AnimationService extends Service
         switch(msg.what) {
           case MSG_ANIMATE:
               handler.removeMessages(MSG_ANIMATE);
-              // todo:
+
               motion_state.updateState();
               if(motion_state.isStateChanged() ||
                  motion_state.isPositionMoved()) {
@@ -246,13 +256,7 @@ public class AnimationService extends Service
                       updateDrawable();
                   }
 
-                  Point pt = motion_state.getPosition();
-                  image_params.x = pt.x;
-                  image_params.y = pt.y;
-
-                  WindowManager wm =
-                      (WindowManager)getSystemService(WINDOW_SERVICE);
-                  wm.updateViewLayout(image_view, image_params);
+                  updatePosition();
 
                   handler.sendEmptyMessageDelayed(
                       MSG_ANIMATE, ANIMATION_INTERVAL);
@@ -389,31 +393,46 @@ public class AnimationService extends Service
                 return false;
             }
 
+            MotionDrawable drawable = getCurrentDrawable();
+            int dw = drawable.getIntrinsicWidth();
+            int dh = drawable.getIntrinsicHeight();
             float proximity_length = params.getProximityDistance();
-            if(cur_x >= 0 && cur_x < proximity_length) {
-                changeState(
-                    params.getWallState(MotionParams.WallDirection.LEFT));
-                return true;
+
+            MotionParams.WallDirection dir;
+            float nx = cur_x;
+            float ny = cur_y;
+            if(cur_x >= 0 && cur_x < dw + proximity_length) {
+                nx = dw / 2f;
+                dir = MotionParams.WallDirection.LEFT;
             }
-            if(cur_x <= display_width &&
-               cur_x > display_width - proximity_length) {
-                changeState(
-                    params.getWallState(MotionParams.WallDirection.RIGHT));
-                return true;
+            else if(cur_x <= display_width &&
+                    cur_x > display_width - dw - proximity_length) {
+                nx = display_width - dw / 2f;
+                dir = MotionParams.WallDirection.RIGHT;
             }
-            if(cur_y >= 0 && cur_y < proximity_length) {
-                changeState(
-                    params.getWallState(MotionParams.WallDirection.UP));
-                return true;
+            else if(cur_y >= 0 && cur_y < dh + proximity_length) {
+                ny = dh / 2f;
+                dir = MotionParams.WallDirection.UP;
             }
-            if(cur_y <= display_height &&
-               cur_y > display_height - proximity_length) {
-                changeState(
-                    params.getWallState(MotionParams.WallDirection.DOWN));
-                return true;
+            else if(cur_y <= display_height &&
+                    cur_y > display_height - dh - proximity_length) {
+                ny = display_height - dh / 2f;
+                dir = MotionParams.WallDirection.DOWN;
+            }
+            else {
+                return false;
             }
 
-            return false;
+            String nstate = params.getWallState(dir);
+            if(nstate == null) {
+                return false;
+            }
+
+            cur_x = target_x = nx;
+            cur_y = target_y = ny;
+            changeState(nstate);
+
+            return true;
         }
 
         private boolean updateMovingState()
@@ -474,7 +493,13 @@ public class AnimationService extends Service
                 MotionParams.MoveDirection.UP,
                 MotionParams.MoveDirection.UP_RIGHT
             };
-            changeState(params.getMoveState(dirs[dir]));
+
+            String nstate = params.getMoveState(dirs[dir]);
+            if(nstate == null) {
+                return;
+            }
+
+            changeState(nstate);
             moving_state = true;
         }
 

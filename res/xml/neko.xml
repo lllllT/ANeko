@@ -8,8 +8,12 @@
                moveStatePrefix="move"
                wallStatePrefix="wall"
                >
-  <motion state="stop" duration="5000" nextState="wait"
+  <motion state="stop" duration="1000" nextState="stop2"
           checkWall="true">
+    <item drawable="@drawable/mati1" />
+  </motion>
+
+  <motion state="stop2" duration="4000" nextState="wait">
     <item drawable="@drawable/mati1" />
   </motion>
 
@@ -68,19 +72,21 @@
     <item drawable="@drawable/neko_move_downleft" />
   </motion>
 
-  <motion state="wallUp" duration="1500" nextState="wait">
+  <!--
+  <motion state="wallUp" duration="1500" nextState="stop2">
     <item drawable="@drawable/neko_wall_up" />
   </motion>
 
-  <motion state="wallDown" duration="1500" nextState="wait">
+  <motion state="wallDown" duration="1500" nextState="stop2">
     <item drawable="@drawable/neko_wall_down" />
   </motion>
+  -->
 
-  <motion state="wallLeft" duration="1500" nextState="wait">
+  <motion state="wallLeft" duration="1500" nextState="stop2">
     <item drawable="@drawable/neko_wall_left" />
   </motion>
 
-  <motion state="wallRight" duration="1500" nextState="wait">
+  <motion state="wallRight" duration="1500" nextState="stop2">
     <item drawable="@drawable/neko_wall_right" />
   </motion>
 </motion-params>
