@@ -8,22 +8,34 @@
                moveStatePrefix="move"
                wallStatePrefix="wall"
                >
-  <motion state="stop" duration="1000" nextState="stop2"
+  <motion state="stop" duration="1000" nextState="wait"
           checkWall="true">
     <item drawable="@drawable/mati1" />
   </motion>
 
-  <motion state="stop2" duration="4000" nextState="wait">
-    <item drawable="@drawable/mati1" />
-  </motion>
-
   <motion state="wait">
-    <item drawable="@drawable/neko_wait" />
+    <item drawable="@drawable/mati1" duration="4000" />
+    <repeat-item repeatCount="2">
+      <repeat-item repeatCount="4">
+        <item drawable="@drawable/kaki1" duration="250" />
+        <item drawable="@drawable/kaki2" duration="250" />
+      </repeat-item>
+      <item drawable="@drawable/mati1" duration="4000" />
+    </repeat-item>
+
+    <item drawable="@drawable/mati2" duration="1500" />
     <repeat-item>
       <repeat-item repeatCount="50">
-        <item drawable="@drawable/neko_sleep" />
+        <item drawable="@drawable/sleep1" duration="1000" />
+        <item drawable="@drawable/sleep2" duration="1000" />
       </repeat-item>
-      <item drawable="@drawable/neko_yawn" />
+
+      <item drawable="@drawable/akubi1" duration="500" />
+      <item drawable="@drawable/akubi_l" duration="500" />
+      <item drawable="@drawable/akubi_r" duration="500" />
+      <item drawable="@drawable/akubi1" duration="500" />
+      <item drawable="@drawable/akubi2" duration="1000" />
+      <item drawable="@drawable/akubi1" duration="500" />
     </repeat-item>
   </motion>
 
@@ -33,60 +45,89 @@
   </motion>
 
   <motion state="moveUp">
-    <item drawable="@drawable/neko_move_up" />
+    <repeat-item>
+      <item drawable="@drawable/up1" duration="250" />
+      <item drawable="@drawable/up2" duration="250" />
+    </repeat-item>
   </motion>
 
   <motion state="moveDown">
-    <item drawable="@drawable/neko_move_down" />
+    <repeat-item>
+      <item drawable="@drawable/down1" duration="250" />
+      <item drawable="@drawable/down2" duration="250" />
+    </repeat-item>
   </motion>
 
   <motion state="moveLeft">
-    <item drawable="@drawable/neko_move_left" />
+    <repeat-item>
+      <item drawable="@drawable/left1" duration="250" />
+      <item drawable="@drawable/left2" duration="250" />
+    </repeat-item>
   </motion>
 
   <motion state="moveRight">
-    <item drawable="@drawable/neko_move_right" />
+    <repeat-item>
+      <item drawable="@drawable/right1" duration="250" />
+      <item drawable="@drawable/right2" duration="250" />
+    </repeat-item>
   </motion>
 
   <motion state="moveUpLeft">
-    <item drawable="@drawable/neko_move_upleft" />
+    <repeat-item>
+      <item drawable="@drawable/upleft1" duration="250" />
+      <item drawable="@drawable/upleft2" duration="250" />
+    </repeat-item>
   </motion>
 
   <motion state="moveUpRight">
-    <item drawable="@drawable/neko_move_upright" />
-  </motion>
-
-  <motion state="moveUpLeft">
-    <item drawable="@drawable/neko_move_upleft" />
+    <repeat-item>
+      <item drawable="@drawable/upright1" duration="250" />
+      <item drawable="@drawable/upright2" duration="250" />
+    </repeat-item>
   </motion>
 
   <motion state="moveDownRight">
-    <item drawable="@drawable/neko_move_downright" />
+    <repeat-item>
+      <item drawable="@drawable/dwright1" duration="250" />
+      <item drawable="@drawable/dwright2" duration="250" />
+    </repeat-item>
   </motion>
 
   <motion state="moveDownLeft">
-    <item drawable="@drawable/neko_move_downleft" />
+    <repeat-item>
+      <item drawable="@drawable/dwleft1" duration="250" />
+      <item drawable="@drawable/dwleft2" duration="250" />
+    </repeat-item>
   </motion>
 
-  <motion state="moveDownLeft">
-    <item drawable="@drawable/neko_move_downleft" />
-  </motion>
-
+  <!-- wall up/down does not work correctry if status bar exist -->
   <!--
-  <motion state="wallUp" duration="1500" nextState="stop2">
-    <item drawable="@drawable/neko_wall_up" />
+  <motion state="wallUp" nextState="wait">
+    <repeat-item repeatCount="3">
+      <item drawable="@drawable/utogi1" duration="250" />
+      <item drawable="@drawable/utogi2" duration="250" />
+    </repeat-item>
   </motion>
 
-  <motion state="wallDown" duration="1500" nextState="stop2">
-    <item drawable="@drawable/neko_wall_down" />
+  <motion state="wallDown" nextState="wait">
+    <repeat-item repeatCount="3">
+      <item drawable="@drawable/dtogi1" duration="250" />
+      <item drawable="@drawable/dtogi2" duration="250" />
+    </repeat-item>
   </motion>
   -->
 
-  <motion state="wallLeft" duration="1500" nextState="stop2">
-    <item drawable="@drawable/neko_wall_left" />
+  <motion state="wallLeft" nextState="wait">
+    <repeat-item repeatCount="3">
+      <item drawable="@drawable/ltogi1" duration="250" />
+      <item drawable="@drawable/ltogi2" duration="250" />
+    </repeat-item>
   </motion>
 
-  <motion state="wallRight" duration="1500" nextState="stop2">
-    <item drawable="@drawable/neko_wall_right" />
+  <motion state="wallRight" nextState="wait">
+    <repeat-item repeatCount="3">
+      <item drawable="@drawable/rtogi1" duration="250" />
+      <item drawable="@drawable/rtogi2" duration="250" />
+    </repeat-item>
   </motion>
 </motion-params>
