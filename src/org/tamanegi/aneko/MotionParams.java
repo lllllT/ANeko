@@ -325,9 +325,7 @@ public class MotionParams
             null, ATTR_ITEM_DURATION, -1);
         int repeat = attrs.getAttributeIntValue(
             null, ATTR_ITEM_REPEAT_COUNT, -1);
-
         MotionDrawable dr = new MotionDrawable();
-        dr.setRepeatCount(repeat);
 
         int depth = xml.getDepth();
         while(true) {
@@ -352,6 +350,8 @@ public class MotionParams
             }
         }
 
+        dr.setTotalDuration(duration);
+        dr.setRepeatCount(repeat);
         items.addFrame(dr, duration);
     }
 }
