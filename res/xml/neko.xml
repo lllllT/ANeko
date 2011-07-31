@@ -8,7 +8,7 @@
                moveStatePrefix="move"
                wallStatePrefix="wall"
                >
-  <motion state="stop" duration="1000" nextState="wait"
+  <motion state="stop" duration="5000" nextState="wait"
           checkWall="true">
     <item drawable="@drawable/mati1" />
   </motion>

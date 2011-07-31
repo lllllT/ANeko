@@ -70,8 +70,8 @@ public class MotionDrawable extends Drawable implements Animatable
     {
         if(drawable instanceof AnimationDrawable) {
             MotionDrawable md = new MotionDrawable((AnimationDrawable)drawable);
+            md.setTotalDuration(duration);
             drawable = md;
-            //duration = (duration < 0 ? md.state.total_duration : duration);
         }
 
         if(drawable instanceof MotionDrawable) {
