@@ -29,7 +29,8 @@ public class AnimationService extends Service
     public static final String ACTION_TOGGLE =
         "org.tamanegi.aneko.action.TOGGLE";
 
-    private static final String PREF_KEY_ENABLE = "motion.enable";
+    public static final String PREF_KEY_ENABLE = "motion.enable";
+    public static final String PREF_KEY_VISIBLE = "motion.visible";
 
     private static final int NOTIF_ID = 1;
 
@@ -185,10 +186,10 @@ public class AnimationService extends Service
 
     private void toggleAnimation()
     {
-        boolean enable = prefs.getBoolean(PREF_KEY_ENABLE, true);
+        boolean visible = prefs.getBoolean(PREF_KEY_VISIBLE, true);
 
         SharedPreferences.Editor edit = prefs.edit();
-        edit.putBoolean(PREF_KEY_ENABLE, ! enable);
+        edit.putBoolean(PREF_KEY_VISIBLE, ! visible);
         edit.commit();
 
         startService(new Intent(this, AnimationService.class)
@@ -219,9 +220,12 @@ public class AnimationService extends Service
         else {
             stopForeground(true);
 
-            NotificationManager nm = (NotificationManager)
-                getSystemService(NOTIFICATION_SERVICE);
-            nm.notify(NOTIF_ID, notif);
+            boolean enable = prefs.getBoolean(PREF_KEY_ENABLE, true);
+            if(enable) {
+                NotificationManager nm = (NotificationManager)
+                    getSystemService(NOTIFICATION_SERVICE);
+                nm.notify(NOTIF_ID, notif);
+            }
         }
     }
 
@@ -302,7 +306,8 @@ public class AnimationService extends Service
     private boolean checkPrefEnable()
     {
         boolean enable = prefs.getBoolean(PREF_KEY_ENABLE, true);
-        if(! enable) {
+        boolean visible = prefs.getBoolean(PREF_KEY_VISIBLE, true);
+        if(! enable || ! visible) {
             startService(new Intent(this, AnimationService.class)
                          .setAction(ACTION_STOP));
             return false;
