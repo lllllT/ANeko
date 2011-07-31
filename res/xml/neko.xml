@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<motion-params acceleration="160dp"
-               deaccelerationDistance="100dp"
-               maxVelocity="100dp"
+<motion-params acceleration="160"
+               maxVelocity="100"
+               deaccelerationDistance="100"
+               proximityDistance="10"
+               initialState="stop"
+               awakeState="awake"
+               moveStatePrefix="move"
+               wallStatePrefix="wall"
                >
   <motion state="stop" duration="1000" nextState="wait"
           checkWall="true">

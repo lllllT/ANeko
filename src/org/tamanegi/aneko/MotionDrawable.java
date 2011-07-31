@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
@@ -22,8 +23,12 @@ public class MotionDrawable extends Drawable implements Animatable
 
     private int cur_frame = -1;
     private int cur_repeat = 0;
-    private int cur_duration = 0;
+    private int cur_duration = -1;
     private OnMotionEndListener on_end = null;
+
+    private int alpha = 0xff;
+    private boolean dither = true;
+    private ColorFilter color_filter;
 
     private Runnable frame_updater = new Runnable() {
             @Override
@@ -32,6 +37,7 @@ public class MotionDrawable extends Drawable implements Animatable
             }
         };
     private Drawable.Callback child_callback = new ChildCallback();
+    private OnMotionEndListener child_end = new ChildOnMotionEnd();
 
     public MotionDrawable()
     {
@@ -64,14 +70,16 @@ public class MotionDrawable extends Drawable implements Animatable
     {
         if(drawable instanceof AnimationDrawable) {
             MotionDrawable md = new MotionDrawable((AnimationDrawable)drawable);
-            duration = (duration < 0 ? md.state.total_duration : duration);
-            md.setCallback(child_callback);
-            state.addFrame(md, duration);
+            drawable = md;
+            //duration = (duration < 0 ? md.state.total_duration : duration);
         }
-        else {
-            drawable.setCallback(child_callback);
-            state.addFrame(drawable, duration);
+
+        if(drawable instanceof MotionDrawable) {
+            MotionDrawable md = (MotionDrawable)drawable;
+            md.setOnMotionEndListener(child_end);
         }
+        drawable.setCallback(child_callback);
+        state.addFrame(drawable, duration);
     }
 
     public Drawable getCurrentFrame()
@@ -89,6 +97,18 @@ public class MotionDrawable extends Drawable implements Animatable
         if(on_end != null) {
             on_end.onMotionEnd(this);
         }
+    }
+
+    @Override
+    public int getIntrinsicWidth()
+    {
+        return getCurrentFrame().getIntrinsicWidth();
+    }
+
+    @Override
+    public int getIntrinsicHeight()
+    {
+        return getCurrentFrame().getIntrinsicHeight();
     }
 
     @Override
@@ -115,15 +135,89 @@ public class MotionDrawable extends Drawable implements Animatable
     }
 
     @Override
-    public void setAlpha(int alpha)
+    public void setAlpha(int _alpha)
     {
-        // todo:
+        if(alpha != _alpha) {
+            alpha = _alpha;
+            Drawable current = getCurrentFrame();
+            if(current != null) {
+                current.setAlpha(alpha);
+            }
+        }
     }
 
     @Override
     public void setColorFilter(ColorFilter cf)
     {
-        // todo:
+        if(color_filter != cf) {
+            color_filter = cf;
+            Drawable current = getCurrentFrame();
+            if(current != null) {
+                current.setColorFilter(color_filter);
+            }
+        }
+    }
+
+    @Override
+    public void setDither(boolean _dither)
+    {
+        if(dither != _dither) {
+            dither = _dither;
+            Drawable current = getCurrentFrame();
+            if(current != null) {
+                current.setDither(dither);
+            }
+        }
+    }
+
+    @Override
+    protected void onBoundsChange(Rect bounds)
+    {
+        Drawable current = getCurrentFrame();
+        if(current != null) {
+            current.setBounds(bounds);
+        }
+    }
+
+    @Override
+    protected boolean onLevelChange(int level)
+    {
+        Drawable current = getCurrentFrame();
+        if(current != null) {
+            return current.setLevel(level);
+        }
+        return false;
+    }
+
+    @Override
+    protected boolean onStateChange(int[] state)
+    {
+        Drawable current = getCurrentFrame();
+        if(current != null) {
+            return current.setState(state);
+        }
+        return false;
+    }
+
+    public boolean setVisible(boolean visible, boolean restart)
+    {
+        boolean changed = super.setVisible(visible, restart);
+        Drawable current = getCurrentFrame();
+        if(current != null) {
+            current.setVisible(visible, restart);
+        }
+
+        if(visible) {
+            if(changed || restart) {
+                stop();
+                start();
+            }
+        }
+        else {
+            stop();
+        }
+
+        return changed;
     }
 
     @Override
@@ -138,6 +232,7 @@ public class MotionDrawable extends Drawable implements Animatable
         if(! isRunning()) {
             cur_frame = -1;
             cur_repeat = 0;
+            cur_duration = 0;
             updateFrame();
         }
     }
@@ -147,7 +242,7 @@ public class MotionDrawable extends Drawable implements Animatable
     {
         if(isRunning()) {
             unscheduleSelf(frame_updater);
-            cur_duration = 0;
+            cur_duration = -1;
         }
     }
 
@@ -173,27 +268,37 @@ public class MotionDrawable extends Drawable implements Animatable
             return;
         }
 
-        Drawable next_drawable = state.getFrame(next);
-        if(next_drawable instanceof Animatable) {
-            Animatable anim = (Animatable)next_drawable;
-            anim.stop();
-            anim.start();
-        }
-
-        int duration = state.getFrameDuration(next);
-        int next_duration =
-            (duration < 0 && state.total_duration < 0 ? -1 :
-             duration < 0 ? state.total_duration :
-             state.total_duration < 0 ? cur_duration + duration :
-             Math.min(cur_duration + duration,
-                      state.total_duration));
-        if(next_duration >= 0) {
-            duration = state.total_duration - next_duration;
-            scheduleSelf(frame_updater, SystemClock.uptimeMillis() + duration);
+        {
+            Drawable current = getCurrentFrame();
+            if(current != null) {
+                current.setVisible(false, false);
+            }
         }
 
         cur_frame = next;
         cur_repeat = next_repeat;
+
+        Drawable next_drawable = state.getFrame(next);
+        next_drawable.setVisible(isVisible(), true);
+        next_drawable.setAlpha(alpha);
+        next_drawable.setDither(dither);
+        next_drawable.setColorFilter(color_filter);
+        next_drawable.setState(getState());
+        next_drawable.setLevel(getLevel());
+        next_drawable.setBounds(getBounds());
+
+        int duration = state.getFrameDuration(next);
+        int next_duration =
+            (duration < 0 && state.total_duration < 0 ? -1 :
+             duration < 0 ? state.total_duration - cur_duration :
+             state.total_duration < 0 ? cur_duration + duration :
+             Math.min(cur_duration + duration,
+                      state.total_duration));
+        if(next_duration >= 0) {
+            duration = next_duration - cur_duration;
+            scheduleSelf(frame_updater, SystemClock.uptimeMillis() + duration);
+        }
+
         cur_duration = (next_duration >= 0 ? next_duration : cur_duration);
         invalidateSelf();
     }
@@ -311,6 +416,17 @@ public class MotionDrawable extends Drawable implements Animatable
         {
             if(who == getCurrentFrame()) {
                 unscheduleSelf(what);
+            }
+        }
+    }
+
+    private class ChildOnMotionEnd implements OnMotionEndListener
+    {
+        @Override
+        public void onMotionEnd(MotionDrawable drawable)
+        {
+            if(drawable == getCurrentFrame()) {
+                updateFrame();
             }
         }
     }
