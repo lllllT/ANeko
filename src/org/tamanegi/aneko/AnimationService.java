@@ -1,5 +1,7 @@
 package org.tamanegi.aneko;
 
+import java.util.Random;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -115,12 +117,25 @@ public class AnimationService extends Service
         WindowManager wm = (WindowManager)getSystemService(WINDOW_SERVICE);
         int dw = wm.getDefaultDisplay().getWidth();
         int dh = wm.getDefaultDisplay().getHeight();
+        int cx, cy;
+        {
+            int pos = new Random().nextInt(400);
+            int ratio = pos % 100;
+            if(pos / 200 == 0) {
+                cx = (dw + 200) * ratio / 100 - 100;
+                cy = ((pos / 100) % 2 == 0 ? -100 : dh + 100);
+            }
+            else {
+                cx = ((pos / 100) % 2 == 0 ? -100 : dw + 100);
+                cy = (dh + 200) * ratio / 100 - 100;
+            }
+        }
 
         motion_state = new MotionState();
         motion_state.setParams(
             new MotionParams(this, getResources(), R.xml.neko));
         motion_state.setDisplaySize(dw, dh);
-        motion_state.setCurrentPosition(-100, 100); // todo:
+        motion_state.setCurrentPosition(cx, cy);
         motion_state.setTargetPosition(dw / 2, dh / 2);
 
         touch_view = new View(this);
