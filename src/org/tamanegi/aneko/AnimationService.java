@@ -133,6 +133,7 @@ public class AnimationService extends Service
         }
 
         motion_state = new MotionState();
+        // todo: catch exception
         motion_state.setParams(
             new MotionParams(this, getResources(), R.xml.neko));
         motion_state.setDisplaySize(dw, dh);
