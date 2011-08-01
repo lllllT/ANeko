@@ -9,18 +9,21 @@
                wallStatePrefix="wall"
                >
   <motion state="stop" nextState="wait" checkWall="true">
+    <item drawable="@drawable/mati1" duration="5000" />
+    <repeat-item repeatCount="4">
+      <item drawable="@drawable/kaki1" duration="250" />
+      <item drawable="@drawable/kaki2" duration="250" />
+    </repeat-item>
     <item drawable="@drawable/mati1" duration="1000" />
   </motion>
 
   <motion state="wait">
     <item drawable="@drawable/mati1" duration="4000" />
-    <repeat-item repeatCount="2">
-      <repeat-item repeatCount="4">
-        <item drawable="@drawable/kaki1" duration="250" />
-        <item drawable="@drawable/kaki2" duration="250" />
-      </repeat-item>
-      <item drawable="@drawable/mati1" duration="4000" />
+    <repeat-item repeatCount="4">
+      <item drawable="@drawable/kaki1" duration="250" />
+      <item drawable="@drawable/kaki2" duration="250" />
     </repeat-item>
+    <item drawable="@drawable/mati1" duration="5000" />
 
     <item drawable="@drawable/mati2" duration="1500" />
     <repeat-item>
