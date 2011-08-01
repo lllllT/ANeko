@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="all">
+  <property name="imagemagick.convert.path"
+            location="D:\cygwin\bin\convert.exe" />
+
+  <property name="src.dir" location="." />
+  <property name="res.dir" location="../res" />
+  <property name="ext.dir" location="." />
+
+  <property name="icon.src.path"
+            location="${res.dir}/drawable/mati1.png" />
+
+  <property name="icon.512x512.path"
+            location="${ext.dir}/icon-512x512.png" />
+  <property name="icon.180x120.path"
+            location="${ext.dir}/icon-180x120.png" />
+
+  <target name="all" depends="icons" />
+
+  <target name="icons">
+    <antcall target="icon-scale">
+      <param name="icon.scale.size" value="96" />
+      <param name="icon.scale.extent" value="96x96" />
+      <param name="icon.scale.background" value="#ffffff00" />
+      <param name="icon.scale.dst" value="${res.dir}/drawable-xhdpi/icon.png" />
+    </antcall>
+    <antcall target="icon-scale">
+      <param name="icon.scale.size" value="64" />
+      <param name="icon.scale.extent" value="72x72-4-4" />
+      <param name="icon.scale.background" value="#ffffff00" />
+      <param name="icon.scale.dst" value="${res.dir}/drawable-hdpi/icon.png" />
+    </antcall>
+    <antcall target="icon-scale">
+      <param name="icon.scale.size" value="48" />
+      <param name="icon.scale.extent" value="48x48" />
+      <param name="icon.scale.background" value="#ffffff00" />
+      <param name="icon.scale.dst" value="${res.dir}/drawable-mdpi/icon.png" />
+    </antcall>
+    <antcall target="icon-scale">
+      <param name="icon.scale.size" value="32" />
+      <param name="icon.scale.extent" value="36x36-2-2" />
+      <param name="icon.scale.background" value="#ffffff00" />
+      <param name="icon.scale.dst" value="${res.dir}/drawable-ldpi/icon.png" />
+    </antcall>
+
+    <antcall target="icon-scale">
+      <param name="icon.scale.size" value="512" />
+      <param name="icon.scale.extent" value="512" />
+      <param name="icon.scale.background" value="#ffffffff" />
+      <param name="icon.scale.dst" value="${icon.512x512.path}" />
+    </antcall>
+    <antcall target="icon-scale">
+      <param name="icon.scale.size" value="112" />
+      <param name="icon.scale.extent" value="180x120-34-4" />
+      <param name="icon.scale.background" value="#ffffffff" />
+      <param name="icon.scale.dst" value="${icon.180x120.path}" />
+    </antcall>
+  </target>
+
+  <uptodate property="icon.scale.updated"
+            srcfile="${icon.src.path}"
+            targetfile="${icon.scale.dst}" />
+  <target name="icon-scale" unless="icon.scale.updated">
+    <exec executable="${imagemagick.convert.path}"
+          failonerror="true">
+      <arg value="${icon.src.path}" />
+      <arg value="-background" />
+      <arg value="${icon.scale.background}" />
+      <arg value="-filter" />
+      <arg value="point" />
+      <arg value="-resize" />
+      <arg value="${icon.scale.size}" />
+      <arg value="-extent" />
+      <arg value="${icon.scale.extent}" />
+      <arg value="-depth" />
+      <arg value="8" />
+      <arg value="${icon.scale.dst}" />
+    </exec>
+  </target>
+</project>
