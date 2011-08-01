@@ -414,29 +414,26 @@ public class AnimationService extends Service
             }
 
             MotionDrawable drawable = getCurrentDrawable();
-            int dw = drawable.getIntrinsicWidth();
-            int dh = drawable.getIntrinsicHeight();
-            float proximity_length = params.getProximityDistance();
+            float dw2 = drawable.getIntrinsicWidth() / 2f;
+            float dh2 = drawable.getIntrinsicHeight() / 2f;
 
             MotionParams.WallDirection dir;
             float nx = cur_x;
             float ny = cur_y;
-            if(cur_x >= 0 && cur_x < dw + proximity_length) {
-                nx = dw / 2f;
+            if(cur_x >= 0 && cur_x < dw2) {
+                nx = dw2;
                 dir = MotionParams.WallDirection.LEFT;
             }
-            else if(cur_x <= display_width &&
-                    cur_x > display_width - dw - proximity_length) {
-                nx = display_width - dw / 2f;
+            else if(cur_x <= display_width && cur_x > display_width - dw2) {
+                nx = display_width - dw2;
                 dir = MotionParams.WallDirection.RIGHT;
             }
-            else if(cur_y >= 0 && cur_y < dh + proximity_length) {
-                ny = dh / 2f;
+            else if(cur_y >= 0 && cur_y < dh2) {
+                ny = dh2;
                 dir = MotionParams.WallDirection.UP;
             }
-            else if(cur_y <= display_height &&
-                    cur_y > display_height - dh - proximity_length) {
-                ny = display_height - dh / 2f;
+            else if(cur_y <= display_height && cur_y > display_height - dh2) {
+                ny = display_height - dh2;
                 dir = MotionParams.WallDirection.DOWN;
             }
             else {
