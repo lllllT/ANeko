@@ -35,7 +35,6 @@ public class AnimationService extends Service
     private static final int NOTIF_ID = 1;
 
     private static final int MSG_ANIMATE = 1;
-    private static final int MSG_MOTION_END = 2;
 
     private static final long ANIMATION_INTERVAL = 125; // msec
 
@@ -243,12 +242,6 @@ public class AnimationService extends Service
         image_view.setImageDrawable(drawable);
         drawable.stop();
         drawable.start();
-
-        int duration = motion_state.getCurrentDuration();
-        handler.removeMessages(MSG_MOTION_END);
-        if(duration >= 0) {
-            handler.sendEmptyMessageDelayed(MSG_MOTION_END, duration);
-        }
     }
 
     private void updatePosition()
@@ -291,10 +284,6 @@ public class AnimationService extends Service
                   handler.sendEmptyMessageDelayed(
                       MSG_ANIMATE, ANIMATION_INTERVAL);
               }
-              break;
-
-          case MSG_MOTION_END:
-              updateToNext();
               break;
 
           default:
@@ -572,11 +561,6 @@ public class AnimationService extends Service
         private MotionDrawable getCurrentDrawable()
         {
             return params.getDrawable(cur_state);
-        }
-
-        private int getCurrentDuration()
-        {
-            return params.getDuration(cur_state);
         }
 
         private Point getPosition()

@@ -74,7 +74,6 @@ public class MotionParams
     {
         private String name;
         private String next_state = null;
-        private int duration = -1;
 
         private boolean check_move = false;
         private boolean check_wall = false;
@@ -155,12 +154,6 @@ public class MotionParams
     {
         Motion motion = motions.get(state);
         return (motion != null ? motion.next_state : null);
-    }
-
-    public int getDuration(String state)
-    {
-        Motion motion = motions.get(state);
-        return (motion != null ? motion.duration : -1);
     }
 
     public boolean needCheckMove(String state)
@@ -269,7 +262,7 @@ public class MotionParams
                 "state is not specified: " + attrs.getPositionDescription());
         }
 
-        motion.duration = attrs.getAttributeIntValue(null, ATTR_DURATION, -1);
+        int duration = attrs.getAttributeIntValue(null, ATTR_DURATION, -1);
         motion.next_state = attrs.getAttributeValue(
             null, ATTR_NEXT_STATE);
         motion.check_move = attrs.getAttributeBooleanValue(
@@ -301,6 +294,9 @@ public class MotionParams
                 throw new IllegalArgumentException("unknown tag: " + name);
             }
         }
+
+        motion.items.setTotalDuration(duration);
+        motion.items.setRepeatCount(1);
 
         motions.put(motion.name, motion);
     }
@@ -352,6 +348,6 @@ public class MotionParams
 
         dr.setTotalDuration(duration);
         dr.setRepeatCount(repeat);
-        items.addFrame(dr, duration);
+        items.addFrame(dr, -1);
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <motion-params acceleration="160"
                maxVelocity="100"
-               deaccelerationDistance="50"
+               deaccelerationDistance="60"
                proximityDistance="10"
                initialState="stop"
                awakeState="awake"
