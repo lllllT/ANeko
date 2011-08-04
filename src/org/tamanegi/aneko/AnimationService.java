@@ -99,6 +99,10 @@ public class AnimationService extends Service
     @Override
     public void onConfigurationChanged(Configuration conf)
     {
+        if(! is_started) {
+            return;
+        }
+
         WindowManager wm = (WindowManager)getSystemService(WINDOW_SERVICE);
         int dw = wm.getDefaultDisplay().getWidth();
         int dh = wm.getDefaultDisplay().getHeight();
@@ -574,7 +578,7 @@ public class AnimationService extends Service
         @Override
         public void onMotionEnd(MotionDrawable drawable)
         {
-            if(drawable == motion_state.getCurrentDrawable()) {
+            if(is_started && drawable == motion_state.getCurrentDrawable()) {
                 updateToNext();
             }
         }
