@@ -31,6 +31,7 @@ public class AnimationService extends Service
 
     public static final String PREF_KEY_ENABLE = "motion.enable";
     public static final String PREF_KEY_VISIBLE = "motion.visible";
+    public static final String PREF_KEY_TRANSPARENCY = "motion.transparency";
 
     private static final int NOTIF_ID = 1;
 
@@ -118,30 +119,11 @@ public class AnimationService extends Service
             return;
         }
 
-        WindowManager wm = (WindowManager)getSystemService(WINDOW_SERVICE);
-        int dw = wm.getDefaultDisplay().getWidth();
-        int dh = wm.getDefaultDisplay().getHeight();
-        int cx, cy;
-        {
-            int pos = new Random().nextInt(400);
-            int ratio = pos % 100;
-            if(pos / 200 == 0) {
-                cx = (dw + 200) * ratio / 100 - 100;
-                cy = ((pos / 100) % 2 == 0 ? -100 : dh + 100);
-            }
-            else {
-                cx = ((pos / 100) % 2 == 0 ? -100 : dw + 100);
-                cy = (dh + 200) * ratio / 100 - 100;
-            }
+        if(! loadMotionState()) {
+            return;
         }
 
-        motion_state = new MotionState();
-        // todo: catch exception
-        motion_state.setParams(
-            new MotionParams(this, getResources(), R.xml.neko));
-        motion_state.setDisplaySize(dw, dh);
-        motion_state.setCurrentPosition(cx, cy);
-        motion_state.setTargetPosition(dw / 2, dh / 2);
+        WindowManager wm = (WindowManager)getSystemService(WINDOW_SERVICE);
 
         touch_view = new View(this);
         touch_view.setOnTouchListener(new TouchListener());
@@ -233,6 +215,50 @@ public class AnimationService extends Service
         }
     }
 
+    private boolean loadMotionState()
+    {
+        motion_state = new MotionState();
+
+        try {
+            MotionParams params =
+                new MotionParams(this, getResources(), R.xml.neko);
+            motion_state.setParams(params);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+
+            startService(new Intent(this, AnimationService.class)
+                         .setAction(ACTION_TOGGLE));
+            return false;
+        }
+
+        WindowManager wm = (WindowManager)getSystemService(WINDOW_SERVICE);
+        int dw = wm.getDefaultDisplay().getWidth();
+        int dh = wm.getDefaultDisplay().getHeight();
+        int cx, cy;
+        {
+            int pos = new Random().nextInt(400);
+            int ratio = pos % 100;
+            if(pos / 200 == 0) {
+                cx = (dw + 200) * ratio / 100 - 100;
+                cy = ((pos / 100) % 2 == 0 ? -100 : dh + 100);
+            }
+            else {
+                cx = ((pos / 100) % 2 == 0 ? -100 : dw + 100);
+                cy = (dh + 200) * ratio / 100 - 100;
+            }
+        }
+
+        String alpha_str = prefs.getString(PREF_KEY_TRANSPARENCY, "0.0");
+        motion_state.alpha = (int)((1 - Float.valueOf(alpha_str)) * 0xff);
+
+        motion_state.setDisplaySize(dw, dh);
+        motion_state.setCurrentPosition(cx, cy);
+        motion_state.setTargetPosition(dw / 2, dh / 2);
+
+        return true;
+    }
+
     private void requestAnimate()
     {
         if(! handler.hasMessages(MSG_ANIMATE)) {
@@ -243,6 +269,11 @@ public class AnimationService extends Service
     private void updateDrawable()
     {
         MotionDrawable drawable = motion_state.getCurrentDrawable();
+        if(drawable == null) {
+            return;
+        }
+
+        drawable.setAlpha(motion_state.alpha);
         image_view.setImageDrawable(drawable);
         drawable.stop();
         drawable.start();
@@ -318,7 +349,12 @@ public class AnimationService extends Service
         public void onSharedPreferenceChanged(SharedPreferences prefs,
                                               String key)
         {
-            checkPrefEnable();
+            if(PREF_KEY_ENABLE.equals(key) || PREF_KEY_VISIBLE.equals(key)) {
+                checkPrefEnable();
+            }
+            else if(loadMotionState()) {
+                requestAnimate();
+            }
         }
     }
 
@@ -352,6 +388,8 @@ public class AnimationService extends Service
         private int display_height = 1;
 
         private MotionParams params;
+        private int alpha = 0xff;
+
         private String cur_state = null;
 
         private boolean moving_state = false;

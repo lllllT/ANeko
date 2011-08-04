@@ -6,6 +6,10 @@
   <string name="notification_disable">neko is sleeping.</string>
 
   <string name="pref_cat_motion">Settings</string>
+
   <string name="pref_motion_enable_title">Enable a neko</string>
   <string name="pref_motion_enable_summary">To neko, or not to neko.</string>
+
+  <string name="pref_motion_transparency_title">Transparency</string>
+  <string name="pref_motion_transparency_summary">Transparency of neko</string>
 </resources>
