@@ -44,7 +44,7 @@ public class AnimationService extends Service
 
     private enum Behaviour
     {
-        closer, away, whimsical
+        closer, further, whimsical
     }
 
     private boolean is_started;
@@ -407,7 +407,7 @@ public class AnimationService extends Service
         private MotionParams params;
         private int alpha = 0xff;
 
-        private Behaviour behaviour = Behaviour.whimsical;
+        private Behaviour behaviour = Behaviour.closer;
         private Behaviour cur_behaviour = Behaviour.closer;
         private long last_behaviour_changed = 0;
 
@@ -619,9 +619,12 @@ public class AnimationService extends Service
                 if((behaviour == Behaviour.whimsical &&
                     (r < 0 || random.nextDouble() * r > 1)) ||
                    cur_behaviour == Behaviour.whimsical) {
-                    cur_behaviour = (random.nextBoolean() ?
-                                     Behaviour.closer : Behaviour.away);
-                    last_behaviour_changed = cur_time;
+                    Behaviour next = (random.nextBoolean() ?
+                                      Behaviour.closer : Behaviour.further);
+                    if(next != cur_behaviour) {
+                        last_behaviour_changed = cur_time;
+                    }
+                    cur_behaviour = next;
                 }
             }
 

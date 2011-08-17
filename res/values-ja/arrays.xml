@@ -8,4 +8,11 @@
     <item>60%</item>
     <item>80%</item>
   </string-array>
+
+  <!-- behaviour -->
+  <string-array name="pref_motion_behaviour_entries">
+    <item>近づく</item>
+    <item>遠ざかる</item>
+    <item>気まぐれ</item>
+  </string-array>
 </resources>

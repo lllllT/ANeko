@@ -16,6 +16,14 @@
        android:entryValues="@array/pref_motion_transparency_entryvalues"
        android:defaultValue="0.0"
        />
+    <ListPreference
+       android:key="motion.behaviour"
+       android:title="@string/pref_motion_behaviour_title"
+       android:summary="@string/pref_motion_behaviour_summary"
+       android:entries="@array/pref_motion_behaviour_entries"
+       android:entryValues="@array/pref_motion_behaviour_entryvalues"
+       android:defaultValue="closer"
+       />
   </PreferenceCategory>
 
 </PreferenceScreen>
