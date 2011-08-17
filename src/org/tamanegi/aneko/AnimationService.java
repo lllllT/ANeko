@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -32,19 +33,27 @@ public class AnimationService extends Service
     public static final String PREF_KEY_ENABLE = "motion.enable";
     public static final String PREF_KEY_VISIBLE = "motion.visible";
     public static final String PREF_KEY_TRANSPARENCY = "motion.transparency";
+    public static final String PREF_KEY_BEHAVIOUR = "motion.behaviour";
 
     private static final int NOTIF_ID = 1;
 
     private static final int MSG_ANIMATE = 1;
 
     private static final long ANIMATION_INTERVAL = 125; // msec
+    private static final long BEHAVIOUR_CHANGE_DURATION = 4000; // msec
+
+    private enum Behaviour
+    {
+        closer, away, whimsical
+    }
 
     private boolean is_started;
     private SharedPreferences prefs;
     private PreferenceChangeListener pref_listener;
 
     private Handler handler;
-    private MotionState motion_state;
+    private MotionState motion_state = null;
+    private Random random;
     private View touch_view = null;
     private ImageView image_view = null;
     private WindowManager.LayoutParams touch_params = null;
@@ -59,6 +68,7 @@ public class AnimationService extends Service
                     return onHandleMessage(msg);
                 }
             });
+        random = new Random();
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
@@ -164,6 +174,7 @@ public class AnimationService extends Service
             wm.removeView(image_view);
         }
 
+        motion_state = null;
         touch_view = null;
         image_view = null;
 
@@ -227,6 +238,7 @@ public class AnimationService extends Service
         catch(Exception e) {
             e.printStackTrace();
 
+            // todo: show toast
             startService(new Intent(this, AnimationService.class)
                          .setAction(ACTION_TOGGLE));
             return false;
@@ -237,7 +249,7 @@ public class AnimationService extends Service
         int dh = wm.getDefaultDisplay().getHeight();
         int cx, cy;
         {
-            int pos = new Random().nextInt(400);
+            int pos = random.nextInt(400);
             int ratio = pos % 100;
             if(pos / 200 == 0) {
                 cx = (dw + 200) * ratio / 100 - 100;
@@ -252,9 +264,14 @@ public class AnimationService extends Service
         String alpha_str = prefs.getString(PREF_KEY_TRANSPARENCY, "0.0");
         motion_state.alpha = (int)((1 - Float.valueOf(alpha_str)) * 0xff);
 
+        motion_state.setBehaviour(
+            Behaviour.valueOf(
+                prefs.getString(PREF_KEY_BEHAVIOUR,
+                                motion_state.behaviour.toString())));
+
         motion_state.setDisplaySize(dw, dh);
         motion_state.setCurrentPosition(cx, cy);
-        motion_state.setTargetPosition(dw / 2, dh / 2);
+        motion_state.setTargetPositionDirect(dw / 2, dh / 2);
 
         return true;
     }
@@ -390,6 +407,10 @@ public class AnimationService extends Service
         private MotionParams params;
         private int alpha = 0xff;
 
+        private Behaviour behaviour = Behaviour.whimsical;
+        private Behaviour cur_behaviour = Behaviour.closer;
+        private long last_behaviour_changed = 0;
+
         private String cur_state = null;
 
         private boolean moving_state = false;
@@ -402,10 +423,6 @@ public class AnimationService extends Service
         {
             state_changed = false;
             position_moved = false;
-
-            if(cur_state == null) {
-                changeState(params.getInitialState());
-            }
 
             float dx = target_x - cur_x;
             float dy = target_y - cur_y;
@@ -420,7 +437,10 @@ public class AnimationService extends Service
             }
 
             if(! moving_state) {
-                changeState(params.getAwakeState());
+                String nstate = params.getAwakeState();
+                if(params.hasState(nstate)) {
+                    changeState(nstate);
+                }
                 return;
             }
 
@@ -483,7 +503,7 @@ public class AnimationService extends Service
             }
 
             String nstate = params.getWallState(dir);
-            if(nstate == null) {
+            if(! params.hasState(nstate)) {
                 return false;
             }
 
@@ -513,7 +533,16 @@ public class AnimationService extends Service
 
         private void setParams(MotionParams _params)
         {
+            String nstate = _params.getInitialState();
+            if(! _params.hasState(nstate)) {
+                throw new IllegalArgumentException(
+                    "Initial State does not exist");
+            }
+
             params = _params;
+
+            changeState(nstate);
+            moving_state = false;
         }
 
         private void changeState(String state)
@@ -554,7 +583,7 @@ public class AnimationService extends Service
             };
 
             String nstate = params.getMoveState(dirs[dir]);
-            if(nstate == null) {
+            if(! params.hasState(nstate)) {
                 return;
             }
 
@@ -568,6 +597,13 @@ public class AnimationService extends Service
             display_height = h;
         }
 
+        private void setBehaviour(Behaviour b)
+        {
+            behaviour = b;
+            cur_behaviour = behaviour;
+            last_behaviour_changed = 0;
+        }
+
         private void setCurrentPosition(float x, float y)
         {
             cur_x = x;
@@ -575,6 +611,68 @@ public class AnimationService extends Service
         }
 
         private void setTargetPosition(float x, float y)
+        {
+            {
+                long cur_time = System.currentTimeMillis();
+                double r = (double)(cur_time - last_behaviour_changed) /
+                    BEHAVIOUR_CHANGE_DURATION;
+                if((behaviour == Behaviour.whimsical &&
+                    (r < 0 || random.nextDouble() * r > 1)) ||
+                   cur_behaviour == Behaviour.whimsical) {
+                    cur_behaviour = (random.nextBoolean() ?
+                                     Behaviour.closer : Behaviour.away);
+                    last_behaviour_changed = cur_time;
+                }
+            }
+
+            if(cur_behaviour == Behaviour.closer) {
+                setTargetPositionDirect(x, y);
+            }
+            else {
+                float dx = display_width / 2f - x;
+                float dy = display_height / 2f - y;
+                if(dx == 0 && dy == 0) {
+                    float ang = random.nextFloat() * (float)Math.PI * 2;
+                    dx = FloatMath.cos(ang);
+                    dy = FloatMath.sin(ang);
+                }
+                if(dx < 0) {
+                    dx = -dx;
+                    dy = -dy;
+                }
+
+                PointF e1, e2;
+                if(dy > dx * display_height / display_width ||
+                   dy < -dx * display_height / display_width) {
+                    float dxdy = dx / dy;
+                    e1 = new PointF(
+                        (display_width - display_height * dxdy) / 2f,
+                        0);
+                    e2 = new PointF(
+                        (display_width + display_height * dxdy) / 2f,
+                        display_height);
+                }
+                else {
+                    float dydx = dy / dx;
+                    e1 = new PointF(
+                        0,
+                        (display_height - display_width * dydx) / 2f);
+                    e2 = new PointF(
+                        display_width,
+                        (display_height + display_width * dydx) / 2f);
+                }
+
+                double d1 = Math.hypot(e1.x - x, e1.y - y);
+                double d2 = Math.hypot(e2.x - x, e2.y - y);
+                PointF e = (d1 > d2 ? e1 : e2);
+
+                float r = 0.9f + random.nextFloat() * 0.1f;
+                setTargetPositionDirect(e.x * r + x * (1 - r),
+                                        e.y * r + y * (1 - r));
+            }
+        }
+
+        private void setTargetPositionDirect(float x, float y)
         {
             target_x = x;
             target_y = y;

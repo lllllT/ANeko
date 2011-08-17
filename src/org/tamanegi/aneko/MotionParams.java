@@ -114,6 +114,11 @@ public class MotionParams
         return proximity_distance;
     }
 
+    public boolean hasState(String state)
+    {
+        return motions.containsKey(state);
+    }
+
     public String getInitialState()
     {
         return initial_state;
@@ -126,7 +131,7 @@ public class MotionParams
 
     public String getMoveState(MoveDirection dir)
     {
-        String state = move_state_prefix +
+        return move_state_prefix +
             (dir == MoveDirection.UP ? "Up" :
              dir == MoveDirection.DOWN ? "Down" :
              dir == MoveDirection.LEFT ? "Left" :
@@ -136,18 +141,16 @@ public class MotionParams
              dir == MoveDirection.DOWN_LEFT ? "DownLeft" :
              dir == MoveDirection.DOWN_RIGHT ? "DownRight" :
              "");
-        return (motions.containsKey(state) ? state : null);
     }
 
     public String getWallState(WallDirection dir)
     {
-        String state = wall_state_prefix +
+        return wall_state_prefix +
             (dir == WallDirection.UP ? "Up" :
              dir == WallDirection.DOWN ? "Down" :
              dir == WallDirection.LEFT ? "Left" :
              dir == WallDirection.RIGHT ? "Right" :
              "");
-        return (motions.containsKey(state) ? state : null);
     }
 
     public String getNextState(String state)
