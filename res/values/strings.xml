@@ -15,4 +15,6 @@
 
   <string name="pref_motion_behaviour_title">Behaviour</string>
   <string name="pref_motion_behaviour_summary">Behaviour of neko</string>
+
+  <string name="msg_skin_load_failed">Failed to load skin.</string>
 </resources>

@@ -6,9 +6,13 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -22,6 +26,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class AnimationService extends Service
 {
@@ -30,10 +35,15 @@ public class AnimationService extends Service
     public static final String ACTION_TOGGLE =
         "org.tamanegi.aneko.action.TOGGLE";
 
+    public static final String ACTION_GET_SKIN =
+        "org.tamanegi.aneko.action.GET_SKIN";
+    public static final String META_KEY_SKIN = "org.tamanegi.aneko.skin";
+
     public static final String PREF_KEY_ENABLE = "motion.enable";
     public static final String PREF_KEY_VISIBLE = "motion.visible";
     public static final String PREF_KEY_TRANSPARENCY = "motion.transparency";
     public static final String PREF_KEY_BEHAVIOUR = "motion.behaviour";
+    public static final String PREF_KEY_SKIN_COMPONENT = "motion.skin";
 
     private static final int NOTIF_ID = 1;
 
@@ -110,7 +120,7 @@ public class AnimationService extends Service
     @Override
     public void onConfigurationChanged(Configuration conf)
     {
-        if(! is_started) {
+        if(! is_started || motion_state == null) {
             return;
         }
 
@@ -230,15 +240,29 @@ public class AnimationService extends Service
     {
         motion_state = new MotionState();
 
+        String skin_pkg = prefs.getString(PREF_KEY_SKIN_COMPONENT, null);
+        ComponentName skin_comp =
+            (skin_pkg == null ? null :
+             ComponentName.unflattenFromString(skin_pkg));
+        skin_comp = (skin_comp == null ?
+                     new ComponentName(this, ANekoActivity.class) : skin_comp);
         try {
-            MotionParams params =
-                new MotionParams(this, getResources(), R.xml.neko);
+            PackageManager pm = getPackageManager();
+            ActivityInfo ai = pm.getActivityInfo(
+                skin_comp, PackageManager.GET_META_DATA);
+            Resources res = pm.getResourcesForActivity(skin_comp);
+
+            int rid = ai.metaData.getInt(META_KEY_SKIN, 0);
+
+            MotionParams params = new MotionParams(this, res, rid);
             motion_state.setParams(params);
         }
         catch(Exception e) {
             e.printStackTrace();
+            Toast.makeText(this, R.string.msg_skin_load_failed,
+                           Toast.LENGTH_LONG)
+                .show();
 
-            // todo: show toast
             startService(new Intent(this, AnimationService.class)
                          .setAction(ACTION_TOGGLE));
             return false;
