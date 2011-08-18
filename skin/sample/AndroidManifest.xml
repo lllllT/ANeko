@@ -7,7 +7,7 @@
   <uses-sdk android:minSdkVersion="5" />
 
   <application android:icon="@drawable/icon" android:label="@string/app_name">
-    <activity android:name=".SampleSkinActivity"
+    <activity android:name="com.example.aneko.sample.SampleSkinActivity"
               android:label="@string/app_name">
       <intent-filter>
         <action android:name="org.tamanegi.aneko.action.GET_SKIN" />
