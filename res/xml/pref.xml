@@ -9,6 +9,14 @@
        android:defaultValue="true"
        />
     <ListPreference
+       android:key="motion.behaviour"
+       android:title="@string/pref_motion_behaviour_title"
+       android:summary="@string/pref_motion_behaviour_summary"
+       android:entries="@array/pref_motion_behaviour_entries"
+       android:entryValues="@array/pref_motion_behaviour_entryvalues"
+       android:defaultValue="closer"
+       />
+    <ListPreference
        android:key="motion.transparency"
        android:title="@string/pref_motion_transparency_title"
        android:summary="@string/pref_motion_transparency_summary"
@@ -16,13 +24,12 @@
        android:entryValues="@array/pref_motion_transparency_entryvalues"
        android:defaultValue="0.0"
        />
-    <ListPreference
-       android:key="motion.behaviour"
-       android:title="@string/pref_motion_behaviour_title"
-       android:summary="@string/pref_motion_behaviour_summary"
-       android:entries="@array/pref_motion_behaviour_entries"
-       android:entryValues="@array/pref_motion_behaviour_entryvalues"
-       android:defaultValue="closer"
+    <org.tamanegi.aneko.SkinPreference
+       android:key="motion.skin"
+       android:title="@string/pref_motion_skin_title"
+       android:summary="@string/pref_motion_skin_summary"
+       android:dialogTitle="@string/pref_skin_dialog_title"
+       android:defaultValue="org.tamanegi.aneko/org.tamanegi.aneko.ANekoActivity"
        />
   </PreferenceCategory>
 

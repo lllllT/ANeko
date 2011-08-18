@@ -10,11 +10,15 @@
   <string name="pref_motion_enable_title">Enable a neko</string>
   <string name="pref_motion_enable_summary">To neko, or not to neko.</string>
 
+  <string name="pref_motion_behaviour_title">Behaviour</string>
+  <string name="pref_motion_behaviour_summary">Behaviour of neko</string>
+
   <string name="pref_motion_transparency_title">Transparency</string>
   <string name="pref_motion_transparency_summary">Transparency of neko</string>
 
-  <string name="pref_motion_behaviour_title">Behaviour</string>
-  <string name="pref_motion_behaviour_summary">Behaviour of neko</string>
+  <string name="pref_motion_skin_title">Skin</string>
+  <string name="pref_motion_skin_summary">Skin of neko</string>
+  <string name="pref_skin_dialog_title">Skin</string>
 
   <string name="msg_skin_load_failed">Failed to load skin.</string>
 </resources>
