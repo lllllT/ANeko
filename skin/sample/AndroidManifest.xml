@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.example.aneko.sample"
+          android:versionCode="1"
+          android:versionName="1.0">
+
+  <uses-sdk android:minSdkVersion="5" />
+
+  <application android:icon="@drawable/icon" android:label="@string/app_name">
+    <activity android:name=".SampleSkinActivity"
+              android:label="@string/app_name">
+      <intent-filter>
+        <action android:name="org.tamanegi.aneko.action.GET_SKIN" />
+      </intent-filter>
+      <meta-data android:name="org.tamanegi.aneko.skin"
+                 android:resource="@xml/skin" />
+    </activity>
+  </application>
+</manifest>
