@@ -2,6 +2,8 @@
 <resources>
   <string name="app_name">ANeko</string>
 
+  <string name="skin_name_neko">neko</string>
+
   <string name="notification_enable">neko is running.</string>
   <string name="notification_disable">neko is sleeping.</string>
 

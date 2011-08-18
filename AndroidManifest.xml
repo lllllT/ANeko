@@ -17,12 +17,6 @@
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
-
-      <intent-filter>
-        <action android:name="org.tamanegi.aneko.action.GET_SKIN" />
-      </intent-filter>
-      <meta-data android:name="org.tamanegi.aneko.skin"
-                 android:resource="@xml/neko" />
     </activity>
 
     <receiver android:name=".ANekoReceiver">
@@ -36,6 +30,15 @@
     </receiver>
 
     <service android:name=".AnimationService" />
+
+    <activity android:name=".NekoSkin"
+              android:label="@string/skin_name_neko">
+      <intent-filter>
+        <action android:name="org.tamanegi.aneko.action.GET_SKIN" />
+      </intent-filter>
+      <meta-data android:name="org.tamanegi.aneko.skin"
+                 android:resource="@xml/neko" />
+    </activity>
 
   </application>
 </manifest>

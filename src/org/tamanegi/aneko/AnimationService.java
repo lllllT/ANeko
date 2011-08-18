@@ -245,7 +245,7 @@ public class AnimationService extends Service
             (skin_pkg == null ? null :
              ComponentName.unflattenFromString(skin_pkg));
         skin_comp = (skin_comp == null ?
-                     new ComponentName(this, ANekoActivity.class) : skin_comp);
+                     new ComponentName(this, NekoSkin.class) : skin_comp);
         try {
             PackageManager pm = getPackageManager();
             ActivityInfo ai = pm.getActivityInfo(

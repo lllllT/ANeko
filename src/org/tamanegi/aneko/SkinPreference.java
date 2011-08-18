@@ -124,7 +124,7 @@ public class SkinPreference extends DialogPreference
         PackageManager pm = context.getPackageManager();
 
         Intent[] internals = {
-            new Intent(context, ANekoActivity.class),
+            new Intent(context, NekoSkin.class),
         };
         Intent intent = new Intent(AnimationService.ACTION_GET_SKIN);
         List<ResolveInfo> activities = pm.queryIntentActivityOptions(
