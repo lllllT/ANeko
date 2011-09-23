@@ -741,7 +741,8 @@ public class AnimationService extends Service
         @Override
         public void onMotionEnd(MotionDrawable drawable)
         {
-            if(is_started && drawable == motion_state.getCurrentDrawable()) {
+            if(is_started && motion_state != null &&
+               drawable == motion_state.getCurrentDrawable()) {
                 updateToNext();
             }
         }
