@@ -309,6 +309,10 @@ public class AnimationService extends Service
 
     private void updateDrawable()
     {
+        if(motion_state == null) {
+            return;
+        }
+
         MotionDrawable drawable = motion_state.getCurrentDrawable();
         if(drawable == null) {
             return;
