@@ -14,7 +14,7 @@
        android:summary="@string/pref_motion_behaviour_summary"
        android:entries="@array/pref_motion_behaviour_entries"
        android:entryValues="@array/pref_motion_behaviour_entryvalues"
-       android:defaultValue="closer"
+       android:defaultValue="@string/pref_motion_behaviour_default"
        />
     <ListPreference
        android:key="motion.transparency"

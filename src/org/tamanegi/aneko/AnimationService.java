@@ -725,7 +725,7 @@ public class AnimationService extends Service
                 nx = (nx < 0 ? -nx :
                       nx >= display_width ? display_width * 2 - nx - 1 :
                       nx);
-                ny = (ny < 0 ? 0 :
+                ny = (ny < 0 ? -ny :
                       ny >= display_height ? display_height * 2 - ny - 1 :
                       ny);
                 setTargetPositionDirect(nx, ny);
