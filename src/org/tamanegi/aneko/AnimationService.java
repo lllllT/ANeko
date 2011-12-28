@@ -16,6 +16,7 @@ import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -56,6 +57,10 @@ public class AnimationService extends Service
     {
         closer, further, whimsical
     }
+    private static final Behaviour BEHAVIOURS[] = {
+        Behaviour.closer, Behaviour.further, Behaviour.whimsical };
+    private static final boolean ICS_OR_LATER =
+        (Build.VERSION.SDK_INT >= 14);
 
     private boolean is_started;
     private SharedPreferences prefs;
@@ -149,7 +154,9 @@ public class AnimationService extends Service
         touch_view.setOnTouchListener(new TouchListener());
         touch_params = new WindowManager.LayoutParams(
             0, 0,
-            WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY,
+            (ICS_OR_LATER ?
+             WindowManager.LayoutParams.TYPE_SYSTEM_ERROR :
+             WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY),
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
             WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
@@ -436,7 +443,7 @@ public class AnimationService extends Service
         private int alpha = 0xff;
 
         private Behaviour behaviour = Behaviour.closer;
-        private Behaviour cur_behaviour = Behaviour.closer;
+        private int cur_behaviour_idx = 0;
         private long last_behaviour_changed = 0;
 
         private String cur_state = null;
@@ -628,8 +635,14 @@ public class AnimationService extends Service
         private void setBehaviour(Behaviour b)
         {
             behaviour = b;
-            cur_behaviour = behaviour;
             last_behaviour_changed = 0;
+
+            for(int i = 0; i < BEHAVIOURS.length; i++) {
+                if(BEHAVIOURS[i] == behaviour) {
+                    cur_behaviour_idx = i;
+                    break;
+                }
+            }
         }
 
         private void setCurrentPosition(float x, float y)
@@ -640,26 +653,27 @@ public class AnimationService extends Service
 
         private void setTargetPosition(float x, float y)
         {
-            {
+            if(! ICS_OR_LATER) {
                 long cur_time = System.currentTimeMillis();
                 double r = (double)(cur_time - last_behaviour_changed) /
                     BEHAVIOUR_CHANGE_DURATION;
-                if((behaviour == Behaviour.whimsical &&
-                    (r < 0 || random.nextDouble() * r > 1)) ||
-                   cur_behaviour == Behaviour.whimsical) {
-                    Behaviour next = (random.nextBoolean() ?
-                                      Behaviour.closer : Behaviour.further);
-                    if(next != cur_behaviour) {
+                if(behaviour == Behaviour.whimsical &&
+                   (r < 0 || random.nextDouble() * r > 1)) {
+                    int next_idx = random.nextInt(BEHAVIOURS.length);
+                    if(next_idx != cur_behaviour_idx) {
                         last_behaviour_changed = cur_time;
                     }
-                    cur_behaviour = next;
+                    cur_behaviour_idx = next_idx;
                 }
             }
+            else {
+                cur_behaviour_idx = BEHAVIOURS.length - 1;
+            }
 
-            if(cur_behaviour == Behaviour.closer) {
+            if(BEHAVIOURS[cur_behaviour_idx] == Behaviour.closer) {
                 setTargetPositionDirect(x, y);
             }
-            else {
+            else if(BEHAVIOURS[cur_behaviour_idx] == Behaviour.further) {
                 float dx = display_width / 2f - x;
                 float dy = display_height / 2f - y;
                 if(dx == 0 && dy == 0) {
@@ -700,6 +714,21 @@ public class AnimationService extends Service
                 float r = 0.9f + random.nextFloat() * 0.1f;
                 setTargetPositionDirect(e.x * r + x * (1 - r),
                                         e.y * r + y * (1 - r));
+            }
+            else {
+                float min_wh4 = Math.min(display_width, display_height) / 4;
+                float r = random.nextFloat() * min_wh4 + min_wh4;
+                float a = random.nextFloat() * 360;
+                float nx = cur_x + r * FloatMath.cos(a);
+                float ny = cur_y + r * FloatMath.sin(a);
+
+                nx = (nx < 0 ? -nx :
+                      nx >= display_width ? display_width * 2 - nx - 1 :
+                      nx);
+                ny = (ny < 0 ? 0 :
+                      ny >= display_height ? display_height * 2 - ny - 1 :
+                      ny);
+                setTargetPositionDirect(nx, ny);
             }
         }
 
