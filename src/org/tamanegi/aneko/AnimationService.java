@@ -316,7 +316,7 @@ public class AnimationService extends Service
 
     private void updateDrawable()
     {
-        if(motion_state == null) {
+        if(motion_state == null || image_view == null) {
             return;
         }
 
@@ -414,6 +414,10 @@ public class AnimationService extends Service
     {
         public boolean onTouch(View v, MotionEvent ev)
         {
+            if(motion_state == null) {
+                return false;
+            }
+
             if(ev.getAction() == MotionEvent.ACTION_OUTSIDE) {
                 motion_state.setTargetPosition(ev.getX(), ev.getY());
                 requestAnimate();
