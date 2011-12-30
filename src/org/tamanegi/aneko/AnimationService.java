@@ -6,8 +6,11 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -53,6 +56,11 @@ public class AnimationService extends Service
     private static final long ANIMATION_INTERVAL = 125; // msec
     private static final long BEHAVIOUR_CHANGE_DURATION = 4000; // msec
 
+    private static final String ACTION_EXTERNAL_APPLICATIONS_AVAILABLE =
+        "android.intent.action.EXTERNAL_APPLICATIONS_AVAILABLE";
+    private static final String EXTRA_CHANGED_PACKAGE_LIST =
+        "android.intent.extra.changed_package_list";
+
     private enum Behaviour
     {
         closer, further, whimsical
@@ -73,6 +81,7 @@ public class AnimationService extends Service
     private ImageView image_view = null;
     private WindowManager.LayoutParams touch_params = null;
     private WindowManager.LayoutParams image_params = null;
+    private BroadcastReceiver receiver = null;
 
     @Override
     public void onCreate()
@@ -148,6 +157,20 @@ public class AnimationService extends Service
             return;
         }
 
+        // prepare to receive broadcast
+        IntentFilter filter;
+        receiver = new Receiver();
+
+        filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        filter.addDataScheme("package");
+        registerReceiver(receiver, filter);
+
+        filter = new IntentFilter();
+        filter.addAction(ACTION_EXTERNAL_APPLICATIONS_AVAILABLE);
+        registerReceiver(receiver, filter);
+
+        // touch event sink and overlay view
         WindowManager wm = (WindowManager)getSystemService(WINDOW_SERVICE);
 
         touch_view = new View(this);
@@ -191,9 +214,14 @@ public class AnimationService extends Service
             wm.removeView(image_view);
         }
 
+        if(receiver != null) {
+            unregisterReceiver(receiver);
+        }
+
         motion_state = null;
         touch_view = null;
         image_view = null;
+        receiver = null;
 
         handler.removeMessages(MSG_ANIMATE);
     }
@@ -245,14 +273,22 @@ public class AnimationService extends Service
 
     private boolean loadMotionState()
     {
-        motion_state = new MotionState();
-
         String skin_pkg = prefs.getString(PREF_KEY_SKIN_COMPONENT, null);
         ComponentName skin_comp =
             (skin_pkg == null ? null :
              ComponentName.unflattenFromString(skin_pkg));
-        skin_comp = (skin_comp == null ?
-                     new ComponentName(this, NekoSkin.class) : skin_comp);
+        if(skin_comp != null && loadMotionState(skin_comp)) {
+            return true;
+        }
+
+        skin_comp = new ComponentName(this, NekoSkin.class);
+        return loadMotionState(skin_comp);
+    }
+
+    private boolean loadMotionState(ComponentName skin_comp)
+    {
+        motion_state = new MotionState();
+
         try {
             PackageManager pm = getPackageManager();
             ActivityInfo ai = pm.getActivityInfo(
@@ -406,6 +442,46 @@ public class AnimationService extends Service
             }
             else if(loadMotionState()) {
                 requestAnimate();
+            }
+        }
+    }
+
+    private class Receiver extends BroadcastReceiver
+    {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            String[] pkgnames = null;
+            if(Intent.ACTION_PACKAGE_ADDED.equals(intent.getAction()) &&
+               intent.getData() != null) {
+                pkgnames = new String[] {
+                    intent.getData().getEncodedSchemeSpecificPart() };
+            }
+            else if(ACTION_EXTERNAL_APPLICATIONS_AVAILABLE.equals(
+                        intent.getAction())) {
+                pkgnames = intent.getStringArrayExtra(
+                    EXTRA_CHANGED_PACKAGE_LIST);
+            }
+            if(pkgnames == null) {
+                return;
+            }
+
+            String skin = prefs.getString(PREF_KEY_SKIN_COMPONENT, null);
+            ComponentName skin_comp =
+                (skin == null ? null :
+                 ComponentName.unflattenFromString(skin));
+            if(skin_comp == null) {
+                return;
+            }
+
+            String skin_pkg = skin_comp.getPackageName();
+            for(String pkgname : pkgnames) {
+                if(skin_pkg.equals(pkgname)) {
+                    if(loadMotionState()) {
+                        requestAnimate();
+                    }
+                    break;
+                }
             }
         }
     }
