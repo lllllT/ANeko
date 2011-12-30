@@ -9,7 +9,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.widget.Toast;
 
-public class SampleSkinActivity extends Activity
+public class SkinActivity extends Activity
 {
     private static final String ANEKO_PACKAGE = "org.tamanegi.aneko";
     private static final String ANEKO_ACTIVITY =
@@ -57,7 +57,7 @@ public class SampleSkinActivity extends Activity
                         }
                         catch(ActivityNotFoundException e) {
                             e.printStackTrace();
-                            Toast.makeText(SampleSkinActivity.this,
+                            Toast.makeText(SkinActivity.this,
                                            R.string.msg_unexpected_err,
                                            Toast.LENGTH_SHORT)
                                 .show();

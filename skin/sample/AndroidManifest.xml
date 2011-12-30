@@ -9,7 +9,7 @@
   <application android:icon="@drawable/icon" android:label="@string/app_name">
 
     <!-- main Activity -->
-    <activity android:name="com.example.aneko.sample.SampleSkinActivity"
+    <activity android:name=".SkinActivity"
               android:label="@string/app_name"
               android:theme="@android:style/Theme.NoDisplay">
       <!-- launch from "open" -->
