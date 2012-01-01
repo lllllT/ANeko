@@ -21,6 +21,8 @@
   <string name="pref_motion_skin_title">スキン</string>
   <string name="pref_motion_skin_summary">neko の皮</string>
   <string name="pref_skin_dialog_title">スキン</string>
+  <string name="pref_skin_search_button">スキンを検索</string>
 
   <string name="msg_skin_load_failed">スキン読み込み失敗。</string>
+  <string name="msg_market_not_found">マーケットアプリケーションが見付からないようです。</string>
 </resources>

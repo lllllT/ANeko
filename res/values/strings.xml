@@ -22,6 +22,10 @@
   <string name="pref_motion_skin_title">Skin</string>
   <string name="pref_motion_skin_summary">Skin of neko</string>
   <string name="pref_skin_dialog_title">Skin</string>
+  <string name="pref_skin_search_button">Search Skin</string>
 
   <string name="msg_skin_load_failed">Failed to load skin.</string>
+  <string name="msg_market_not_found">Market application is not found.</string>
+
+  <string name="skin_search_uri">market://search?q=ANeko%20skin</string>
 </resources>
