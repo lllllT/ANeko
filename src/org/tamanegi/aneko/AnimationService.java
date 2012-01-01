@@ -796,8 +796,8 @@ public class AnimationService extends Service
                                         e.y * r + y * (1 - r));
             }
             else {
-                float min_wh4 = Math.min(display_width, display_height) / 4;
-                float r = random.nextFloat() * min_wh4 + min_wh4;
+                float min_wh2 = Math.min(display_width, display_height) / 2f;
+                float r = random.nextFloat() * min_wh2 + min_wh2;
                 float a = random.nextFloat() * 360;
                 float nx = cur_x + r * FloatMath.cos(a);
                 float ny = cur_y + r * FloatMath.sin(a);
