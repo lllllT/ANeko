@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="all">
-  <property name="imagemagick.convert.path"
-            location="D:\cygwin\bin\convert.exe" />
+  <property name="imagemagick.convert.path" value="gm" />
+  <property name="imagemagick.convert.arg" value="convert" />
 
   <property name="src.dir" location="." />
   <property name="res.dir" location="../res" />
@@ -14,6 +14,8 @@
             location="${ext.dir}/icon-512x512.png" />
   <property name="icon.180x120.path"
             location="${ext.dir}/icon-180x120.png" />
+  <property name="icon.1024x500.path"
+            location="${ext.dir}/icon-1024x500.png" />
 
   <property name="neko.src.dir"
             location="${res.dir}/drawable-mdpi" />
@@ -32,10 +34,12 @@
     <icon-scale size="32" extent="36x36-2-2" background="#ffffff00"
                 dst="${res.dir}/drawable-ldpi/icon.png" />
 
-    <icon-scale size="512" extent="512" background="#ffffffff"
+    <icon-scale size="512" extent="512" background="#ffffff"
                 dst="${icon.512x512.path}" />
-    <icon-scale size="112" extent="180x120-34-4" background="#ffffffff"
+    <icon-scale size="112" extent="180x120-34-4" background="#ffffff"
                 dst="${icon.180x120.path}" />
+    <icon-scale size="480" extent="1024x500-262-10" background="#ffffff"
+                dst="${icon.1024x500.path}" />
   </target>
 
   <macrodef name="icon-scale">
@@ -59,9 +63,10 @@
   <target name="icon-scale" unless="icon.scale.updated">
     <exec executable="${imagemagick.convert.path}"
           failonerror="true">
-      <arg value="${icon.src.path}" />
+      <arg value="${imagemagick.convert.arg}" />
       <arg value="-background" />
       <arg value="${icon.scale.background}" />
+      <arg value="${icon.src.path}" />
       <arg value="-filter" />
       <arg value="point" />
       <arg value="-resize" />
@@ -128,6 +133,7 @@
   <target name="neko-xhdpi" unless="neko-xhdpi.updated">
     <exec executable="${imagemagick.convert.path}"
           failonerror="true">
+      <arg value="${imagemagick.convert.arg}" />
       <arg value="${neko.src.path}" />
       <arg value="-filter" />
       <arg value="point" />
