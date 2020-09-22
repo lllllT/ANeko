@@ -11,14 +11,11 @@ Build
 
 Prerequisites:
 
-* [Android SDK](http://developer.android.com/sdk/index.html)
-* [Eclipse](http://www.eclipse.org/downloads/)
-* [ADT Plugin for Eclipse](http://developer.android.com/sdk/eclipse-adt.html)
+* [Android Studio](https://developer.android.com/studio)
 
-Import to Eclipse:
-
-* File > Import... > Existing Project into Workspace
-* Choose this directory and Finish
+How to Build :
+* File -> Open -> Select Project
+* Sync Project with Gradle
 
 Then clean, compile and run.
 
@@ -26,4 +23,9 @@ Then clean, compile and run.
 To create skin
 --------------
 
-See [skin document](http://www.tamanegi.org/prog/android-apps/aneko-skin.html#create-skin).
+Support both app-method and xml file-method.
+
+See [skin document](http://www.tamanegi.org/prog/android-apps/aneko-skin.html#create-skin) for app method.
+
+See [how-to-make skin file(korean)](https://gall.dcinside.com/mgallery/board/view/?id=micateam&no=857787) for xml file method. 
+ 
