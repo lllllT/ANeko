@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "applicationId": "org.tamanegi.aneko",
+  "variantType": "BASE_APK",
+  "elements": [
+    {
+      "outputType": {
+        "type": "BUNDLE_MANIFEST"
+      },
+      "apkData": {
+        "type": "MAIN",
+        "splits": [],
+        "versionCode": 6,
+        "versionName": "0.2.1",
+        "outputFile": "app-debug.apk",
+        "fullName": "debug",
+        "baseName": "debug",
+        "dirName": ""
+      },
+      "path": "AndroidManifest.xml",
+      "properties": {
+        "packageId": "org.tamanegi.aneko",
+        "split": "",
+        "minSdkVersion": "19"
+      }
+    }
+  ]
+}
