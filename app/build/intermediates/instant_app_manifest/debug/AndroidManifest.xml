@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.tamanegi.aneko"
+    android:targetSandboxVersion="2"
+    android:versionCode="6"
+    android:versionName="0.2.1" >
+
+    <uses-sdk
+        android:minSdkVersion="19"
+        android:targetSdkVersion="29" />
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <application
+        android:name="androidx.multidex.MultiDexApplication"
+        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+        android:debuggable="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name" >
+        <activity
+            android:name="org.tamanegi.aneko.ANekoActivity"
+            android:label="@string/app_name"
+            android:requestLegacyExternalStorage="true"
+            android:theme="@style/Theme.AppCompat.Light" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service android:name="org.tamanegi.aneko.AnimationService" />
+
+        <activity
+            android:name="org.tamanegi.aneko.NekoSkin"
+            android:label="@string/skin_name_neko" >
+            <intent-filter>
+                <action android:name="org.tamanegi.aneko.action.GET_SKIN" />
+            </intent-filter>
+
+            <meta-data
+                android:name="org.tamanegi.aneko.skin"
+                android:resource="@xml/neko" />
+        </activity>
+    </application>
+
+</manifest>

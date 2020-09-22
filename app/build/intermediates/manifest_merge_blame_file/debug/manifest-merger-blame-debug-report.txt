@@ -1,0 +1,93 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="org.tamanegi.aneko"
+4    android:versionCode="6"
+5    android:versionName="0.2.1" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="19"
+8-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml
+9        android:targetSdkVersion="29" />
+9-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+11-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:6:3-79
+11-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:6:20-76
+12    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+12-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:7:3-76
+12-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:7:20-73
+13    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+13-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:8:3-79
+13-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:8:20-76
+14    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+14-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:9:3-79
+14-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:9:20-76
+15    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+15-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:10:3-78
+15-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:10:20-75
+16    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
+16-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:11:3-78
+16-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:11:20-75
+17    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+17-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:12:3-74
+17-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:12:20-72
+18
+19    <application
+19-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:14:3-44:17
+20        android:name="androidx.multidex.MultiDexApplication"
+21        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+21-->[androidx.core:core:1.5.0-alpha02] /home/cuj1559/.gradle/caches/transforms-2/files-2.1/6263bdca5a078f951f340215ccd101f3/core-1.5.0-alpha02/AndroidManifest.xml:24:18-86
+22        android:debuggable="true"
+23        android:icon="@drawable/icon"
+23-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:15:7-36
+24        android:label="@string/app_name" >
+24-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:16:7-39
+25        <activity
+25-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:19:5-29:16
+26            android:name="org.tamanegi.aneko.ANekoActivity"
+26-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:20:9-38
+27            android:label="@string/app_name"
+27-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:21:9-41
+28            android:requestLegacyExternalStorage="true"
+28-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:23:9-52
+29            android:theme="@style/Theme.AppCompat.Light" >
+29-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:22:9-53
+30            <intent-filter>
+30-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:25:7-28:23
+31                <action android:name="android.intent.action.MAIN" />
+31-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:26:9-61
+31-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:26:17-58
+32
+33                <category android:name="android.intent.category.LAUNCHER" />
+33-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:27:9-69
+33-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:27:19-66
+34            </intent-filter>
+35        </activity>
+36
+37        <service android:name="org.tamanegi.aneko.AnimationService" />
+37-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:31:5-49
+37-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:31:14-46
+38
+39        <activity
+39-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:33:5-42:16
+40            android:name="org.tamanegi.aneko.NekoSkin"
+40-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:34:9-33
+41            android:label="@string/skin_name_neko" >
+41-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:35:9-47
+42            <intent-filter>
+42-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:36:7-38:23
+43                <action android:name="org.tamanegi.aneko.action.GET_SKIN" />
+43-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:37:9-69
+43-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:37:17-66
+44            </intent-filter>
+45
+46            <meta-data
+46-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:39:7-41:42
+47                android:name="org.tamanegi.aneko.skin"
+47-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:40:11-49
+48                android:resource="@xml/neko" />
+48-->/home/cuj1559/바탕화면/ANeko1/app/src/main/AndroidManifest.xml:41:11-39
+49        </activity>
+50    </application>
+51
+52</manifest>
