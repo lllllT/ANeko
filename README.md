@@ -37,5 +37,6 @@ See [how-to-make skin file(korean)](https://gall.dcinside.com/mgallery/board/vie
  - Deleted SkinPreference.java
  - Changed to be able to import skin files from internal storage
  - Migrated Eclipse ADT project to Intelij IDEA Gradle style project
+ - Deleted behaviour option and added size option
  - Optimize performance
  
