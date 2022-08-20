@@ -9,8 +9,9 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.Xml;
+
+import androidx.core.content.res.ResourcesCompat;
 
 public class MotionParams {
   public enum MoveDirection {
@@ -286,9 +287,7 @@ public class MotionParams {
     int duration = attrs.getAttributeIntValue(
         null, ATTR_ITEM_DURATION, -1);
   
-    Drawable d = res.getDrawable(drawable);
-    Log.d("AAAA", "drawable :" + d + " bs=" + d.getBounds());
-  
+    Drawable d = ResourcesCompat.getDrawable(res, drawable, null);
     items.addFrame(d, duration);
   }
 

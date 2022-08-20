@@ -19,7 +19,7 @@ public class MotionDrawable extends Drawable implements Animatable {
     void onMotionEnd(MotionDrawable drawable);
   }
   
-  private MotionConstantState state;
+  private final MotionConstantState state;
   
   private int cur_frame = -1;
   private int cur_repeat = 0;
@@ -30,9 +30,9 @@ public class MotionDrawable extends Drawable implements Animatable {
   private boolean dither = true;
   private ColorFilter color_filter;
   
-  private Runnable frame_updater = this::updateFrame;
-  private Drawable.Callback child_callback = new ChildCallback();
-  private OnMotionEndListener child_end = new ChildOnMotionEnd();
+  private final Runnable frame_updater = this::updateFrame;
+  private final Drawable.Callback child_callback = new ChildCallback();
+  private final OnMotionEndListener child_end = new ChildOnMotionEnd();
   
   MotionDrawable() {
     state = new MotionConstantState();
@@ -275,7 +275,7 @@ public class MotionDrawable extends Drawable implements Animatable {
   }
   
   private static class MotionConstantState extends ConstantState {
-    private ArrayList<ItemInfo> drawables;
+    private final ArrayList<ItemInfo> drawables;
     private int changing_configurations = 0;
     private int opacity;
     private int total_duration = 0;
@@ -346,8 +346,8 @@ public class MotionDrawable extends Drawable implements Animatable {
   }
   
   private static class ItemInfo {
-    private Drawable drawable;
-    private int duration;
+    private final Drawable drawable;
+    private final int duration;
     
     private ItemInfo(Drawable drawable, int duration) {
       this.drawable = drawable;

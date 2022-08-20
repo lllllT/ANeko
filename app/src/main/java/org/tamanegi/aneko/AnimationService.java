@@ -26,6 +26,7 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -147,6 +148,7 @@ public class AnimationService extends Service {
         motion_state.setDisplaySize(width, height);
     }
 
+    @SuppressLint("WrongConstant")
     private void startAnimation() {
         this.pref_listener = new PreferenceChangeListener();
         this.prefs.registerOnSharedPreferenceChangeListener(this.pref_listener);
@@ -161,13 +163,14 @@ public class AnimationService extends Service {
             this.touch_view = new View(this);
             this.touch_view.setOnTouchListener(new TouchListener());
             LayoutParams touch_params = new LayoutParams(-2, -2, Build.VERSION.SDK_INT > 25 ? 2038 : 2002, 262168, -3);
-            touch_params.gravity = 17;
+            touch_params.gravity = Gravity.CENTER;
             assert wm != null;
             wm.addView(this.touch_view, touch_params);
             this.image_view = new ImageView(this);
             this.image_params = new LayoutParams(this.image_width, this.image_height, Build.VERSION.SDK_INT > 25 ? 2038 : 2006, 536, -3);
-            this.image_params.gravity = 51;
+            this.image_params.gravity = 51; //TODO : Gravity == 51?
             wm.addView(this.image_view, this.image_params);
+
             //TODO : balloon
             /*
             this.balloonV = new ImageView(this);
@@ -242,7 +245,7 @@ public class AnimationService extends Service {
         PendingIntent intent = PendingIntent.getService(
                 this, 0,
                 new Intent(this, AnimationService.class).setAction(ACTION_TOGGLE),
-                0);
+                Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0);
 
         if (Build.VERSION.SDK_INT > 25) {
             NotificationChannel channel = new NotificationChannel("ANeko", "ANeko Service",
@@ -275,15 +278,15 @@ public class AnimationService extends Service {
     }
 
     private boolean loadMotionState() {
-        String skin = prefs.getString(PREF_KEY_SKIN_COMPONENT,"");
-        if(skin.contains(".xml") || skin.equals("")) return loadMotion_dir();
+        String skin = prefs.getString(PREF_KEY_SKIN_COMPONENT, "");
+        if (skin.contains(".xml") || skin.equals("")) return loadMotion_dir();
         else return loadMotion_apk();
     }
 
     private boolean loadMotion_apk() {
         String skin_pkg = prefs.getString(PREF_KEY_SKIN_COMPONENT, null);
         ComponentName skin_comp = (skin_pkg == null ? null : ComponentName.unflattenFromString(skin_pkg));
-        if(skin_comp != null && loadMotionState(skin_comp)) {
+        if (skin_comp != null && loadMotionState(skin_comp)) {
             return true;
         }
         skin_comp = new ComponentName(this, NekoSkin.class);
@@ -343,7 +346,7 @@ public class AnimationService extends Service {
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, R.string.msg_skin_load_failed,
-                    Toast.LENGTH_LONG)
+                            Toast.LENGTH_LONG)
                     .show();
 
             startService(new Intent(this, AnimationService.class)
