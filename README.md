@@ -29,6 +29,8 @@ See [skin document](http://www.tamanegi.org/prog/android-apps/aneko-skin.html#cr
 See [how-to-make skin file(korean)](https://gall.dcinside.com/mgallery/board/view/?id=micateam&no=857787) for internal file method. 
 
 ### Changelogs from legecy ANeko
+
+~ Sep 23, 2020
  - changed minSDK to 19 (Android 4.4)
  - Migrated Support library to AndroidX
  - Changed PreferenceActivity to PreferenceFragmentCompat and AppCompatActivity
@@ -39,4 +41,10 @@ See [how-to-make skin file(korean)](https://gall.dcinside.com/mgallery/board/vie
  - Migrated Eclipse ADT project to Intelij IDEA Gradle style project
  - Deleted behaviour option and added size option
  - Optimize performance
+ 
+~ Aug 28, 2022
+ - Changed target SDK to 33 (Android 13)
+ - Applied Material You style
+ - Dropped load skin from local storage option
+ - Dropped support of Android 19 (4.4) and under
  
