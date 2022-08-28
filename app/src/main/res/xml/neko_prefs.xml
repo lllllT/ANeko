@@ -1,42 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/pref_cat_motion">
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="motion.enable"
-            android:summary="@string/pref_motion_enable_summary"
-            android:title="@string/pref_motion_enable_title" />
+    <ListPreference
+        android:defaultValue="0.0"
+        android:entries="@array/pref_motion_transparency_entries"
+        android:entryValues="@array/pref_motion_transparency_entryvalues"
+        android:key="motion.transparency"
+        android:summary="@string/pref_motion_transparency_summary"
+        android:title="@string/pref_motion_transparency_title" />
 
-        <ListPreference
-            android:defaultValue="0.0"
-            android:entries="@array/pref_motion_transparency_entries"
-            android:entryValues="@array/pref_motion_transparency_entryvalues"
-            android:key="motion.transparency"
-            android:summary="@string/pref_motion_transparency_summary"
-            android:title="@string/pref_motion_transparency_title" />
+    <ListPreference
+        android:defaultValue="240"
+        android:entries="@array/pref_motion_size"
+        android:entryValues="@array/pref_motion_size_entryvalues"
+        android:key="motion.size"
+        android:summary="@string/pref_motion_size_summary"
+        android:title="@string/pref_motion_size_title" />
 
-        <ListPreference
-            android:defaultValue="240"
-            android:entries="@array/pref_motion_size"
-            android:entryValues="@array/pref_motion_size_entryvalues"
-            android:key="motion.size"
-            android:summary="@string/pref_motion_size_summary"
-            android:title="@string/pref_motion_size_title" />
+    <ListPreference
+        android:defaultValue="com.fqxd.gftools.features.gfneko/com.fqxd.gftools.features.gfneko.NekoSkin"
+        android:dialogTitle="@string/pref_skin_dialog_title"
+        android:key="motion.skin"
+        android:summary="@string/pref_motion_skin_summary"
+        android:title="@string/pref_motion_skin_title" />
 
-        <ListPreference
-            android:defaultValue="com.fqxd.gftools.features.gfneko/com.fqxd.gftools.features.gfneko.NekoSkin"
-            android:dialogTitle="@string/pref_skin_dialog_title"
-            android:key="motion.skin"
-            android:summary="@string/pref_motion_skin_summary"
-            android:title="@string/pref_motion_skin_title" />
-
-        <Preference
-            android:key="get.skin"
-            android:title="Search Skin"
-            android:summary="Find other skins on Google Play"/>
-
-        <Preference
-            android:icon="@drawable/ic_error_outline"
-            android:summary="Skin Directory : /ANeko/skins/" />
-    </PreferenceCategory>
+    <Preference
+        android:key="get.skin"
+        android:summary="Find other skins on Google Play"
+        android:title="Search Skin" />
 </PreferenceScreen>
