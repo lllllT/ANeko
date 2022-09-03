@@ -39,7 +39,7 @@
         <action android:name="org.tamanegi.aneko.action.GET_SKIN" />
       </intent-filter>
       <meta-data
-          android:name="org.renewal.aneko.skin"
+          android:name="org.tamanegi.aneko.skin"
           android:resource="@xml/neko" />
     </activity>
   </application>
