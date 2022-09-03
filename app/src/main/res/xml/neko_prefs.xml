@@ -17,7 +17,6 @@
         android:title="@string/pref_motion_size_title" />
 
     <ListPreference
-        android:defaultValue="com.fqxd.gftools.features.gfneko/com.fqxd.gftools.features.gfneko.NekoSkin"
         android:dialogTitle="@string/pref_skin_dialog_title"
         android:key="motion.skin"
         android:summary="@string/pref_motion_skin_summary"

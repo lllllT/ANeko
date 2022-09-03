@@ -4,8 +4,8 @@ apply plugin: 'kotlin-android'
 android {
     compileSdkVersion 33
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     lintOptions {
@@ -14,7 +14,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "org.tamanegi.aneko"
+        applicationId "org.renewal.aneko"
         minSdkVersion 21
         targetSdkVersion 33
 

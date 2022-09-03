@@ -1,4 +1,4 @@
-package org.tamanegi.aneko;
+package org.renewal.aneko;
 
 import android.Manifest;
 import android.content.ActivityNotFoundException;
@@ -23,6 +23,8 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import com.kieronquinn.monetcompat.app.MonetCompatActivity;
 import com.kieronquinn.monetcompat.view.MonetSwitch;
+
+import org.tamanegi.aneko.NekoSkin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -135,7 +137,7 @@ public class ANekoActivity extends MonetCompatActivity {
             for (Map<String, Object> map : InstalledList) {
                 String component = (map.get(KEY_COMPONENT) + "").replace("ComponentInfo{", "").replace("}", "");
                 String name = map.get(KEY_LABEL) + " " + external;
-                if (component.equals("org.tamanegi.aneko/org.tamanegi.aneko.NekoSkin")) continue;
+                if (component.equals("org.renewal.aneko/org.tamanegi.aneko.NekoSkin")) continue;
                 list[count++] = PreValue.equals("") ? component : name;
             }
             return list;
