@@ -1,6 +1,10 @@
 ANeko
 =====
 
+
+[![version](https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQKUUtefY6l9YGHF0GmQAijrUAUueZcJqwGIA&usqp=CAU)](https://play.google.com/store/apps/details?id=org.renewal.aneko)
+
+
 Introduction
 ------------
 Android version of neko (or nekoDA, xneko, oneko, etc...)
