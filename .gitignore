@@ -5,6 +5,7 @@
 # Gradle files
 .gradle/
 build/
+private_key.pepk
 
 # Local configuration file (sdk path, etc)
 local.properties
