@@ -4,6 +4,7 @@
         android:defaultValue="0.0"
         android:entries="@array/pref_motion_transparency_entries"
         android:entryValues="@array/pref_motion_transparency_entryvalues"
+        android:icon="@drawable/ic_fluent_shape_exclude_24_regular"
         android:key="motion.transparency"
         android:summary="@string/pref_motion_transparency_summary"
         android:title="@string/pref_motion_transparency_title" />
@@ -12,17 +13,20 @@
         android:defaultValue="240"
         android:entries="@array/pref_motion_size"
         android:entryValues="@array/pref_motion_size_entryvalues"
+        android:icon="@drawable/ic_fluent_slide_size_24_regular"
         android:key="motion.size"
         android:summary="@string/pref_motion_size_summary"
         android:title="@string/pref_motion_size_title" />
 
     <ListPreference
         android:dialogTitle="@string/pref_skin_dialog_title"
+        android:icon="@drawable/ic_fluent_animal_cat_24_regular"
         android:key="motion.skin"
         android:summary="@string/pref_motion_skin_summary"
         android:title="@string/pref_motion_skin_title" />
 
     <Preference
+        android:icon="@drawable/ic_fluent_slide_multiple_search_24_regular"
         android:key="get.skin"
         android:summary="Find other skins on Google Play"
         android:title="Search Skin" />
