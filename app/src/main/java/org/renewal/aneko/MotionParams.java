@@ -1,4 +1,4 @@
-package org.tamanegi.aneko;
+package org.renewal.aneko;
 
 import java.io.IOException;
 import java.util.HashMap;

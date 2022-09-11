@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.tamanegi.aneko;
+package org.renewal.aneko;
 
 import android.content.Intent;
 

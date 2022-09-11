@@ -18,6 +18,8 @@
   </string-array>
 
   <string-array name="pref_motion_size">
+    <item>40x40</item>
+    <item>80x80</item>
     <item>120x120</item>
     <item>160x160</item>
     <item>200x200</item>
@@ -32,6 +34,8 @@
   </string-array>
 
   <string-array name="pref_motion_size_entryvalues">
+    <item>40</item>
+    <item>80</item>
     <item>120</item>
     <item>160</item>
     <item>200</item>

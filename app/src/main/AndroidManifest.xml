@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="org.tamanegi.aneko">
+    package="org.renewal.aneko">
 
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -10,17 +10,21 @@
   <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
   <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
-  <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
-      tools:ignore="QueryAllPackagesPermission" />
+
+  <queries>
+    <intent>
+      <action android:name="org.tamanegi.aneko.action.GET_SKIN" />
+    </intent>
+  </queries>
 
   <application
       android:icon="@drawable/icon"
       android:label="@string/app_name"
-      android:name=".Applications"
+      android:name="org.renewal.aneko.Applications"
       tools:ignore="AllowBackup">
 
     <activity
-        android:name=".ANekoActivity"
+        android:name="org.renewal.aneko.ANekoActivity"
         android:theme="@style/Theme.App.Palette"
         android:exported="true">
       <intent-filter>
@@ -29,10 +33,10 @@
       </intent-filter>
     </activity>
 
-    <service android:name=".AnimationService" />
+    <service android:name="org.renewal.aneko.AnimationService" />
 
     <activity
-        android:name=".NekoSkin"
+        android:name="org.tamanegi.aneko.NekoSkin"
         android:label="@string/skin_name_neko"
         android:exported="true">
       <intent-filter>

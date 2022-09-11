@@ -1,4 +1,4 @@
-package org.tamanegi.aneko;
+package org.renewal.aneko;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -35,16 +35,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.tamanegi.aneko.NekoSkin;
+
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 
 public class AnimationService extends Service {
-    public static final String ACTION_START = "org.tamanegi.aneko.action.START";
-    public static final String ACTION_STOP = "org.tamanegi.aneko.action.STOP";
-    public static final String ACTION_TOGGLE = "org.tamanegi.aneko.action.TOGGLE";
+    public static final String ACTION_START = "org.renewal.aneko.action.START";
+    public static final String ACTION_STOP = "org.renewal.aneko.action.STOP";
+    public static final String ACTION_TOGGLE = "org.renewal.aneko.action.TOGGLE";
 
     public static final String ACTION_GET_SKIN = "org.tamanegi.aneko.action.GET_SKIN";
     public static final String META_KEY_SKIN = "org.tamanegi.aneko.skin";
@@ -93,7 +96,7 @@ public class AnimationService extends Service {
     private BroadcastReceiver receiver = null;
 
     TextView textV;
-    private LayoutParams textParams = null;
+    private final LayoutParams textParams = null;
 
     ImageView balloonV;
     LayoutParams balloonParams = null;
@@ -260,20 +263,19 @@ public class AnimationService extends Service {
                 .setSmallIcon(R.drawable.icon)
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(getString(start ? R.string.notification_enable : R.string.notification_disable))
-                .setPriority(Notification.PRIORITY_LOW);
+                .setPriority(Notification.PRIORITY_LOW)
+                .setOnlyAlertOnce(true)
+                .setOngoing(true)
+                .setAutoCancel(false);
 
-        Notification notif = builder.build();
-        notif.flags = Notification.FLAG_ONGOING_EVENT;
-        notif.flags = Notification.FLAG_AUTO_CANCEL;
-        notif.flags = Notification.FLAG_ONLY_ALERT_ONCE;
-
+        Notification notify = builder.build();
         stopForeground(true);
         if (start) {
-            startForeground(1, notif);
+            startForeground(1, notify);
             return;
         }
         if (this.prefs.getBoolean(PREF_KEY_ENABLE, true)) {
-            ((NotificationManager) Objects.requireNonNull(getSystemService(NOTIFICATION_SERVICE))).notify(1, notif);
+            ((NotificationManager) Objects.requireNonNull(getSystemService(NOTIFICATION_SERVICE))).notify(1, notify);
         }
     }
 
@@ -493,9 +495,9 @@ public class AnimationService extends Service {
             String ts = String.format(Locale.KOREAN, "%02d:%02d", cal.get(Calendar.HOUR), cal.get(Calendar.MINUTE));
             if (batteryInfo != null) {
 //      batteryInfo.getLevel() + batteryInfo.get
-                textV.setText(ts + "\n" + batteryInfo.level + "%");
+                textV.setText(MessageFormat.format("{0}\n{1}%", ts, batteryInfo.level));
             } else {
-                textV.setText(ts + "\n" + "no battery info.");
+                textV.setText(MessageFormat.format("{0}\nno battery info.", ts));
             }
             tvHandler.sendEmptyMessageDelayed(MSG_TXT, TV_INTERVAL);
         }
@@ -672,7 +674,7 @@ public class AnimationService extends Service {
         private MotionParams params;
         private int alpha = 0xff;
 
-        //    private Behaviour behaviour = Behaviour.closer;
+        //private Behaviour behaviour = Behaviour.closer;
         private Behaviour behaviour = Behaviour.whimsical;
         private int cur_behaviour_idx = 0;
         private long last_behaviour_changed = 0;
@@ -683,12 +685,9 @@ public class AnimationService extends Service {
         private boolean state_changed = false;
         private boolean position_moved = false;
 
-        private MotionEndListener on_motion_end = new MotionEndListener();
-
+        private final MotionEndListener on_motion_end = new MotionEndListener();
 
         private void updateState() {
-
-
             state_changed = false;
             position_moved = false;
 
@@ -716,13 +715,13 @@ public class AnimationService extends Service {
 
             float acceleration = params.getAcceleration();
             float max_velocity = params.getMaxVelocity();
-            float deaccelerate_distance = params.getDeaccelerationDistance();
+            float decelerate_distance = params.getDeaccelerationDistance();
 
             vx += acceleration * interval * dx / len;
             vy += acceleration * interval * dy / len;
             float vec = (float) Math.sqrt(vx * vx + vy * vy);
             float vmax = max_velocity *
-                    Math.min((len + 1) / (deaccelerate_distance + 1), 1);
+                    Math.min((len + 1) / (decelerate_distance + 1), 1);
             if (vec > vmax) {
                 float vr = vmax / vec;
                 vx *= vr;
