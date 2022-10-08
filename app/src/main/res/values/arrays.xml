@@ -9,7 +9,7 @@
     <item>80%</item>
   </string-array>
 
-  <string-array name="pref_motion_transparency_entryvalues">
+  <string-array name="pref_motion_transparency_entry_values">
     <item>0.0</item>
     <item>0.2</item>
     <item>0.4</item>
@@ -33,7 +33,7 @@
     <item>520x520</item>
   </string-array>
 
-  <string-array name="pref_motion_size_entryvalues">
+  <string-array name="pref_motion_size_entry_values">
     <item>40</item>
     <item>80</item>
     <item>120</item>

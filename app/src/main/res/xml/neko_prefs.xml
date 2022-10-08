@@ -3,7 +3,7 @@
     <ListPreference
         android:defaultValue="0.0"
         android:entries="@array/pref_motion_transparency_entries"
-        android:entryValues="@array/pref_motion_transparency_entryvalues"
+        android:entryValues="@array/pref_motion_transparency_entry_values"
         android:icon="@drawable/ic_fluent_shape_exclude_24_regular"
         android:key="motion.transparency"
         android:summary="@string/pref_motion_transparency_summary"
@@ -12,7 +12,7 @@
     <ListPreference
         android:defaultValue="240"
         android:entries="@array/pref_motion_size"
-        android:entryValues="@array/pref_motion_size_entryvalues"
+        android:entryValues="@array/pref_motion_size_entry_values"
         android:icon="@drawable/ic_fluent_slide_size_24_regular"
         android:key="motion.size"
         android:summary="@string/pref_motion_size_summary"
