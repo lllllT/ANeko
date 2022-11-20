@@ -1,0 +1,87 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.MonetCompat" parent="Theme.MaterialComponents.DayNight">
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_variant</item>
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="o_mr1">@bool/light_status_nav</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">@bool/light_status_nav</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/navigation_bar</item>
+        <item name="colorControlActivated">@color/accent</item>
+    </style>
+    <style name="Theme.MonetCompat.Legacy" parent="Theme.AppCompat.DayNight">
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_variant</item>
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="o_mr1">@bool/light_status_nav</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">@bool/light_status_nav</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/navigation_bar</item>
+        <item name="colorControlActivated">@color/accent</item>
+    </style>
+    <style name="MaterialAlertDialog.Material3" parent="MaterialAlertDialog.MaterialComponents">
+        <item name="enforceMaterialTheme">true</item>
+        <item name="android:layout">@layout/m3_alert_dialog</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.MaterialAlertDialog.Material3</item>
+    </style>
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="TextAppearance.SearchBar"
+        parent="Widget.MaterialComponents.TimePicker.Display.TextInputEditText">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Theme.App" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:colorBackground">@color/ui_bg</item>
+        <item name="colorBackgroundFloating">@color/ui_bg</item>
+        <item name="colorSurface">@color/ui_bg_surface</item>
+        <item name="colorPrimarySurface">@color/ui_bg_toolbar</item>
+
+        <item name="colorPrimary">@color/ui_accent</item>
+        <item name="colorPrimaryVariant">@color/ui_accent</item>
+        <item name="colorOnPrimary">@color/ui_fg</item>
+
+        <item name="colorSecondary">@color/ui_accent</item>
+        <item name="colorSecondaryVariant">@color/ui_accent</item>
+        <item name="colorOnSecondary">@color/ui_fg</item>
+
+        <item name="android:textColor">@color/text_color_primary</item>
+        <item name="android:textColorPrimary">@color/text_color_primary</item>
+        <item name="android:textColorSecondary">@color/text_color_secondary</item>
+        <item name="android:fontFamily">@font/inter</item>
+        <item name="textAppearanceListItem">@style/TextAppearance.App.ListItem.Title</item>
+
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="Theme.App.Palette" parent="Theme.MaterialComponents.DayNight">
+        <item name="android:fontFamily">@font/inter_medium</item>
+        <item name="android:fontFeatureSettings">cv03, cv04</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.App.Material3" parent="Theme.Material3.DayNight.NoActionBar" />
+
+    <style name="TextAppearance.App.CollapsingToolbar.Expanded" parent="TextAppearance.Design.CollapsingToolbar.Expanded">
+        <item name="android:fontFamily">@font/inter</item>
+    </style>
+
+    <style name="TextAppearance.App.CollapsingToolbar.Collapsed" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:fontFamily">@font/inter</item>
+    </style>
+
+    <style name="TextAppearance.App.ListItem.Title" parent="TextAppearance.AppCompat.Subhead">
+        <item name="android:textSize">19sp</item> <!-- A12 B2: 20sp -->
+    </style>
+
+    <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+</resources>
