@@ -46,5 +46,15 @@
           android:name="org.tamanegi.aneko.skin"
           android:resource="@xml/neko" />
     </activity>
+
+    <service android:name=".QuickSettingService"
+        android:label="ANeko"
+        android:icon="@drawable/icon"
+        android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+        android:exported="true">
+      <intent-filter>
+        <action android:name="android.service.quicksettings.action.QS_TILE" />
+      </intent-filter>
+    </service>
   </application>
 </manifest>

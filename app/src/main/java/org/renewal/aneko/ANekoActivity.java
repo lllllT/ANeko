@@ -39,11 +39,18 @@ public class ANekoActivity extends MonetCompatActivity {
     SharedPreferences prefs;
     MonetSwitch motionToggle;
 
+    SharedPreferences.OnSharedPreferenceChangeListener prefsListener = (sharedPreferences, key) -> {
+        if (key.equals(AnimationService.PREF_KEY_ENABLE)) {
+            motionToggle.setChecked(prefs.getBoolean(AnimationService.PREF_KEY_ENABLE, false));
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_neko);
         prefs = getSharedPreferences(getPackageName() + "_preferences", MODE_PRIVATE);
+        prefs.registerOnSharedPreferenceChangeListener(prefsListener);
 
         motionToggle = findViewById(R.id.motionEnable);
         motionToggle.setChecked(prefs.getBoolean(AnimationService.PREF_KEY_ENABLE, false));
